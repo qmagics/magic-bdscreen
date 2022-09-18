@@ -1,0 +1,58 @@
+[
+    {
+        "id": "1",
+        "title": "大屏一",
+        "container": {
+            "width": 600,
+            "height": 600
+        },
+        "blocks": [
+            {
+                "type": "text",
+                "left": 100,
+                "top": 100,
+                "zIndex": 1
+            },
+            {
+                "type": "button",
+                "left": 200,
+                "top": 100,
+                "zIndex": 1
+            },
+            {
+                "type": "input",
+                "left": 200,
+                "top": 200,
+                "zIndex": 2
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "title": "大屏二",
+        "container": {
+            "width": 1000,
+            "height": 800
+        },
+        "blocks": [
+            {
+                "type": "button",
+                "left": 100,
+                "top": 100,
+                "zIndex": 1
+            },
+            {
+                "type": "button",
+                "left": 200,
+                "top": 100,
+                "zIndex": 1
+            },
+            {
+                "type": "button",
+                "left": 300,
+                "top": 200,
+                "zIndex": 1
+            }
+        ]
+    }
+]
