@@ -8,6 +8,8 @@ export interface BlockData {
     left: number;
     top: number;
     zIndex: number;
+    alignCenterWhenDrop?: boolean;
+    isFocused?: boolean;
 }
 
 export interface ConfigData {

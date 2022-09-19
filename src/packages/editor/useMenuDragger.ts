@@ -28,7 +28,8 @@ export const useMenuDragger = ({ canvasRef, configData }: { canvasRef: Ref<HTMLD
                     top: e.offsetY,
                     left: e.offsetX,
                     zIndex: 1,
-                    type: currentComponent.value!.type
+                    type: currentComponent.value!.type,
+                    alignCenterWhenDrop:true
                 }
             ]
         }

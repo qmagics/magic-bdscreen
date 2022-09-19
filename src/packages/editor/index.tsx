@@ -1,11 +1,12 @@
 import { computed, defineComponent, PropType, ref, StyleValue } from "vue";
 import EditorHeader from './header';
-import { ConfigData } from "@/types";
+import { BlockData, ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
 import './editor.scss';
 import ComponentLib from "./component-lib";
-import { useMenuDragger } from "./useMenDragger";
+import { useMenuDragger } from "./useMenuDragger";
+import { useBlockDragger } from "./useBlockDragger";
 
 export default defineComponent({
     props: {
@@ -37,6 +38,19 @@ export default defineComponent({
         // 物料库拖拽管理
         const { triggerMenuItemDragstart } = useMenuDragger({ canvasRef, configData });
 
+        // 画布中区块的拖拽管理
+        const clearBlockFocused = () => {
+            configData.value.blocks.forEach(block => block.isFocused = false);
+        }
+        const onBlockMousedown = (e: Event, block: BlockData) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            clearBlockFocused();
+            block.isFocused = true;
+        }
+
+
         return () => {
             return <div class="editor">
                 <EditorHeader></EditorHeader>
@@ -55,7 +69,7 @@ export default defineComponent({
                         <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef}>
                             {
                                 configData.value?.blocks.map(block => {
-                                    return <BlockItem block={block}></BlockItem>
+                                    return <BlockItem class={{ 'is--focused': block.isFocused }} block={block} onMousedown={(e) => onBlockMousedown(e, block)}></BlockItem>
                                 })
                             }
                         </div>

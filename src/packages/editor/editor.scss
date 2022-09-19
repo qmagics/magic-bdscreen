@@ -1,4 +1,8 @@
-html{
+*{
+    box-sizing: border-box;
+}
+
+html {
     font-size: 14px;
 }
 
@@ -91,6 +95,21 @@ body {
 
 .block-item {
     position: absolute;
+
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    &.is--focused {
+        &:after{
+            border: 2px dashed rgb(255, 89, 0);
+        }
+    }
 }
 
 .component-lib {
