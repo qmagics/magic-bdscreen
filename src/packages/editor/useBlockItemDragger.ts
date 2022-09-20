@@ -17,6 +17,20 @@ interface DragState {
     };
 }
 
+/**
+ * 获取所有可能会显示的参考线
+ * @param unfocusedBlocks 所有未选中的区块
+ * @param lastSelectedBlock 最后一个选中的区块
+ */
+function getLines(unfocusedBlocks: BlockData[], lastSelectedBlock: BlockData): DragState['lines'] {
+    const lines = {
+        x: [],
+        y: []
+    }
+
+    return lines;
+}
+
 export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockItemDraggerArgs) => {
 
     const dragState: DragState = {
@@ -33,6 +47,7 @@ export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockIt
         dragState.startX = e.clientX;
         dragState.startY = e.clientY;
         dragState.startPosList = focusData.value.focused.map(({ left, top }) => ({ left, top }));
+        dragState.lines = getLines(focusData.value.unfocused, lastSelectedBlock.value);
 
         document.addEventListener('mousemove', onMousemove);
         document.addEventListener('mouseup', onMouseup);
