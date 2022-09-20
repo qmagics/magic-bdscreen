@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
 }
 
@@ -91,6 +91,25 @@ body {
         background-color: $bg-color-2;
         position: relative;
     }
+
+    .mark-line {
+        position: absolute;
+        z-index: 1;
+
+        &-x {
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            border-left: 1px dashed $mark-line-color;
+        }
+
+        &-y {
+            left: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed $mark-line-color;
+        }
+    }
 }
 
 .block-item {
@@ -106,7 +125,7 @@ body {
     }
 
     &.is--focused {
-        &:after{
+        &:after {
             border: 2px dashed rgb(255, 89, 0);
         }
     }
