@@ -1,12 +1,13 @@
+import './editor.scss';
 import { computed, defineComponent, PropType, ref, StyleValue } from "vue";
 import EditorHeader from './header';
-import { BlockData, ConfigData } from "@/types";
+import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
-import './editor.scss';
 import ComponentLib from "./component-lib";
 import { useMenuDragger } from "./useMenuDragger";
-import { useBlockDragger } from "./useBlockDragger";
+import { useFocus } from './useFocus';
+import { useBlockItemDragger } from "./useBlockItemDragger";
 
 export default defineComponent({
     props: {
@@ -17,6 +18,8 @@ export default defineComponent({
     },
     emits: ['update:modelValue'],
     setup: (props, { emit }) => {
+
+        // 配置数据代理对象
         const configData = computed({
             get() {
                 return props.modelValue;
@@ -26,6 +29,7 @@ export default defineComponent({
             }
         });
 
+        // 画布样式
         const canvasStyle = computed<StyleValue>(() => {
             return {
                 width: `${configData.value?.container.width}px`,
@@ -33,23 +37,17 @@ export default defineComponent({
             }
         });
 
+        // 画布元素
         const canvasRef = ref();
 
         // 物料库拖拽管理
         const { triggerMenuItemDragstart } = useMenuDragger({ canvasRef, configData });
 
-        // 画布中区块的拖拽管理
-        const clearBlockFocused = () => {
-            configData.value.blocks.forEach(block => block.isFocused = false);
-        }
-        const onBlockMousedown = (e: Event, block: BlockData) => {
-            e.preventDefault();
-            e.stopPropagation();
+        // 区块选中焦点的管理
+        const { triggerBlockItemMousedown, clearBlocksFocused, focusData, lastSelectedBlock } = useFocus({ configData, onBlockMousedown: e => triggerMousedown(e) });
 
-            clearBlockFocused();
-            block.isFocused = true;
-        }
-
+        // 区块的拖拽管理
+        const { triggerMousedown } = useBlockItemDragger({ focusData, lastSelectedBlock });
 
         return () => {
             return <div class="editor">
@@ -66,10 +64,10 @@ export default defineComponent({
                 </div>
                 <div class="editor-container">
                     <div class="editor-container__wrapper">
-                        <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef}>
+                        <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef} onMousedown={clearBlocksFocused}>
                             {
-                                configData.value?.blocks.map(block => {
-                                    return <BlockItem class={{ 'is--focused': block.isFocused }} block={block} onMousedown={(e) => onBlockMousedown(e, block)}></BlockItem>
+                                configData.value?.blocks.map((block, index) => {
+                                    return <BlockItem class={{ 'is--focused': block.isFocused }} block={block} onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}></BlockItem>
                                 })
                             }
                         </div>

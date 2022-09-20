@@ -1,7 +1,12 @@
-import { ConfigData, RegisterComponent } from "@/types"
-import { ref, Ref, WritableComputedRef } from "vue"
+import { ConfigData, RegisterComponent } from "@/types";
+import { ref, Ref, WritableComputedRef } from "vue";
 
-export const useMenuDragger = ({ canvasRef, configData }: { canvasRef: Ref<HTMLDivElement>, configData: WritableComputedRef<ConfigData> }) => {
+interface UseMenuDraggerArgs {
+    canvasRef: Ref<HTMLDivElement>;
+    configData: WritableComputedRef<ConfigData>;
+}
+
+export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) => {
 
     const currentComponent = ref<RegisterComponent | null>();
 
@@ -29,7 +34,7 @@ export const useMenuDragger = ({ canvasRef, configData }: { canvasRef: Ref<HTMLD
                     left: e.offsetX,
                     zIndex: 1,
                     type: currentComponent.value!.type,
-                    alignCenterWhenDrop:true
+                    alignCenterWhenDrop: true
                 }
             ]
         }

@@ -2,14 +2,18 @@ import { BlockData } from "@/types";
 import { MANAGER_KEY } from "@/utils/const";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
 
-const useAlignCenterWhenDrop = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
+const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
     onMounted(() => {
+        const { clientWidth, clientHeight } = blockRef.value!;
+
         if (block.alignCenterWhenDrop) {
-            const { clientWidth, clientHeight } = blockRef.value!;
             block.left = block.left - clientWidth / 2;
             block.top = block.top - clientHeight / 2;
             block.alignCenterWhenDrop = false;
         }
+
+        block.width = clientWidth;
+        block.height = clientHeight;
     });
 }
 
@@ -33,8 +37,8 @@ export default defineComponent({
             }
         });
 
-        // 放下时位置相对放置点居中
-        useAlignCenterWhenDrop(props.block, blockRef);
+        // 校正和补充元素属性
+        useAdjustElement(props.block, blockRef);
 
         return () => {
             const { componentMap } = manager;
