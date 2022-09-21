@@ -1,8 +1,11 @@
-import { BlockData } from "@/types";
-import { ComputedRef, reactive } from "vue";
+import { BlockData, ConfigData } from "@/types";
+import { ComputedRef, reactive, WritableComputedRef } from "vue";
+import events from "./events";
+import { MarkLineData } from "./markline";
 import { FocusData } from "./useFocus";
 
 interface UseBlockItemDraggerArgs {
+    configData: WritableComputedRef<ConfigData>,
     focusData: FocusData,
     lastSelectedBlock: ComputedRef<BlockData>
 }
@@ -10,8 +13,8 @@ interface UseBlockItemDraggerArgs {
 interface DragState {
     startX: number;
     startY: number;
-    startTop: number;
     startLeft: number;
+    startTop: number;
     startPosList: { left: number, top: number }[];
     lines: {
         x: { showLeft: number, left: number }[],
@@ -19,25 +22,28 @@ interface DragState {
     };
 }
 
-export interface MarkLine {
-    x: number | null;
-    y: number | null;
-}
-
 /**
  * 获取所有可能会显示的参考线
  * @param unfocusedBlocks 所有未选中的区块
  * @param lastSelectedBlock 最后一个选中的区块
  */
-function getLines(unfocusedBlocks: BlockData[], lastSelectedBlock: BlockData): DragState['lines'] {
+function getLines(configData: WritableComputedRef<ConfigData>, unfocusedBlocks: BlockData[], lastSelectedBlock: BlockData): DragState['lines'] {
     const lines: DragState['lines'] = {
         x: [],
         y: []
     }
 
-    const { left: BLeft, top: BTop, width: BWidth, height: BHeight } = lastSelectedBlock;
+    // 将整个画布容器也视作一个区块，包含进参考线生成的逻辑中
+    const containerBlock = {
+        left: 0,
+        top: 0,
+        width: configData.value.container.width,
+        height: configData.value.container.height
+    }
 
-    unfocusedBlocks.forEach(block => {
+    // 添加区块靠近时可能会产生的所有参考线
+    const { width: BWidth, height: BHeight } = lastSelectedBlock;
+    [...unfocusedBlocks, containerBlock].forEach(block => {
         const { left: ALeft, top: ATop, width: AWidth, height: AHeight } = block;
 
         lines.y.push({ showTop: ATop, top: ATop - BHeight! }); // 底对顶
@@ -45,12 +51,18 @@ function getLines(unfocusedBlocks: BlockData[], lastSelectedBlock: BlockData): D
         lines.y.push({ showTop: ATop + AHeight! / 2, top: ATop + AHeight! / 2 - BHeight! / 2 }); // 中对中
         lines.y.push({ showTop: ATop + AHeight!, top: ATop + AHeight! - BHeight! }); // 底对底
         lines.y.push({ showTop: ATop + AHeight!, top: ATop + AHeight! }); // 顶对底
-    })
+
+        lines.x.push({ showLeft: ALeft, left: ALeft - BWidth! }); // 右对左
+        lines.x.push({ showLeft: ALeft, left: ALeft }); // 左对左
+        lines.x.push({ showLeft: ALeft + AWidth! / 2, left: ALeft + AWidth! / 2 - BWidth! / 2 }); // 中对中
+        lines.x.push({ showLeft: ALeft + AWidth!, left: ALeft + AWidth! - BWidth! }); // 右对右
+        lines.x.push({ showLeft: ALeft + AWidth!, left: ALeft + AWidth! }); // 左对右
+    });
 
     return lines;
 }
 
-export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockItemDraggerArgs) => {
+export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }: UseBlockItemDraggerArgs) => {
 
     const dragState: DragState = {
         startX: 0,
@@ -64,10 +76,9 @@ export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockIt
         }
     }
 
-    // 辅助线
-    const markLine: MarkLine = reactive({
-        x: 0,
-        y: 0
+    const markline: MarkLineData = reactive({
+        x: null,
+        y: null
     });
 
     const triggerMousedown = (e: MouseEvent) => {
@@ -76,35 +87,57 @@ export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockIt
         dragState.startLeft = lastSelectedBlock.value.left;
         dragState.startTop = lastSelectedBlock.value.top;
         dragState.startPosList = focusData.value.focused.map(({ left, top }) => ({ left, top }));
-        dragState.lines = getLines(focusData.value.unfocused, lastSelectedBlock.value);
+        dragState.lines = getLines(configData, focusData.value.unfocused, lastSelectedBlock.value);
 
         document.addEventListener('mousemove', onMousemove);
         document.addEventListener('mouseup', onMouseup);
+
+        events.emit('dragStart');
     }
 
     const onMousemove = (e: MouseEvent) => {
         let { clientX: endX, clientY: endY } = e;
 
-        const left = endX - dragState.startX + dragState.startLeft;
-        const top = endY - dragState.startY + dragState.startTop;
+        // 最后一个选中区块的最新位置
+        const newLeft = endX - dragState.startX + dragState.startLeft;
+        const newTop = endY - dragState.startY + dragState.startTop;
 
-        let y = null;
-        let x = null;
+        // 辅助线位置
+        let x = null, y = null;
+
+        // 计算辅助线位置 横向
         for (let i = 0; i < dragState.lines.y.length; i++) {
-            // 获取每根线
-            const { top: t, showTop: s } = dragState.lines.y[i];
+            const { showTop: s, top: t } = dragState.lines.y[i];
 
-            if (Math.abs(t - top) < 5) {  // 判断是否接近
+            // 判断是否接近
+            if (Math.abs(newTop - t) < 5) {
                 y = s;
                 endY = dragState.startY - dragState.startTop + t;
                 break;
             }
         }
-        markLine.y = y;
 
+        // 计算辅助线位置 纵向
+        for (let i = 0; i < dragState.lines.x.length; i++) {
+            const { showLeft: s, left: l } = dragState.lines.x[i];
+
+            // 判断是否接近
+            if (Math.abs(newLeft - l) < 5) {
+                x = s;
+                endX = dragState.startX - dragState.startLeft + l;
+                break;
+            }
+        }
+
+        // 更新辅助线UI
+        markline.y = y;
+        markline.x = x;
+
+        // 移动的距离
         const durX = endX - dragState.startX;
         const durY = endY - dragState.startY;
 
+        // 给所有拖拽的区块设置最新位置
         focusData.value.focused.forEach((block, index) => {
             const { left, top } = dragState.startPosList[index];
             block.left = left + durX;
@@ -115,14 +148,14 @@ export const useBlockItemDragger = ({ focusData, lastSelectedBlock }: UseBlockIt
     const onMouseup = (e: MouseEvent) => {
         document.removeEventListener('mousemove', onMousemove);
         document.removeEventListener('mouseup', onMouseup);
-        markLine.x = null;
-        markLine.y = null;
-    }
+        markline.x = null;
+        markline.y = null;
 
+        events.emit('dragEnd');
+    }
 
     return {
         triggerMousedown,
-        markLine
+        markline
     }
-
 }

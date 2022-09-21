@@ -4,8 +4,8 @@ import EditorHeader from './header';
 import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
-import MarkLines from './mark-lines';
 import ComponentLib from "./component-lib";
+import Markline from './markline';
 import { useMenuDragger } from "./useMenuDragger";
 import { useFocus } from './useFocus';
 import { useBlockItemDragger } from "./useBlockItemDragger";
@@ -42,23 +42,23 @@ export default defineComponent({
         const canvasRef = ref();
 
         // 物料库拖拽管理
-        const { triggerMenuItemDragstart } = useMenuDragger({ canvasRef, configData });
+        const { triggerMenuItemDragstart, triggerMenuItemDragend } = useMenuDragger({ canvasRef, configData });
 
         // 区块选中焦点的管理
         const { triggerBlockItemMousedown, clearBlocksFocused, focusData, lastSelectedBlock } = useFocus({ configData, onBlockMousedown: e => triggerMousedown(e) });
 
         // 区块的拖拽管理
-        const { triggerMousedown, markLine } = useBlockItemDragger({ focusData, lastSelectedBlock });
+        const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
 
         return () => {
             return <div class="editor">
-                <EditorHeader></EditorHeader>
+                <EditorHeader configData={configData}></EditorHeader>
                 <div class="editor-left-sidebar">
                     <panel>
                         {
                             {
                                 header: () => <div style={{ textAlign: 'center', fontWeight: "bold" }}>物料</div>,
-                                default: () => <ComponentLib onItemDragstart={triggerMenuItemDragstart}></ComponentLib>
+                                default: () => <ComponentLib onItemDragstart={triggerMenuItemDragstart} onItemDragend={triggerMenuItemDragend}></ComponentLib>
                             }
                         }
                     </panel>
@@ -68,11 +68,15 @@ export default defineComponent({
                         <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef} onMousedown={clearBlocksFocused}>
                             {
                                 configData.value?.blocks.map((block, index) => {
-                                    return <BlockItem class={{ 'is--focused': block.isFocused }} block={block} onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}></BlockItem>
+                                    return <BlockItem
+                                        class={{ 'is--focused': block.isFocused }}
+                                        block={block}
+                                        onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
+                                    ></BlockItem>
                                 })
                             }
 
-                            <MarkLines markLine={markLine}></MarkLines>
+                            <Markline data={markline}></Markline>
                         </div>
                     </div>
                 </div>

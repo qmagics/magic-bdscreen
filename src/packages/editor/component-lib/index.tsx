@@ -4,7 +4,7 @@ import { MANAGER_KEY } from "@/utils/const";
 import { computed, defineComponent, inject, PropType, WritableComputedRef } from "vue";
 
 export default defineComponent({
-    emits: ['itemDragstart'],
+    emits: ['itemDragstart', 'itemDragend'],
 
     // props: {
     //     configData: Object as PropType<WritableComputedRef<ConfigData | undefined>>
@@ -25,6 +25,10 @@ export default defineComponent({
             emit('itemDragstart', e, component);
         }
 
+        const onItemDragend = (e: Event, component: RegisterComponent) => {
+            emit('itemDragend', e, component);
+        }
+
         return () => {
             return <div class="component-lib">
                 <div class="component-lib__menu">
@@ -39,7 +43,7 @@ export default defineComponent({
                 <div class="component-lib__content">
                     {currentComponentList.value.map(component => {
                         const { preview } = manager.componentMap[component.type];
-                        return <div class="component-item" draggable onDragstart={e => onItemDragstart(e, component)}>
+                        return <div class="component-item" draggable onDragstart={e => onItemDragstart(e, component)} onDragend={e => onItemDragend(e, component)}>
                             {preview()}
                         </div>
                     })}
