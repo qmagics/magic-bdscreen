@@ -1,5 +1,6 @@
 import { BlockData, ConfigData } from "@/types";
 import { ComputedRef, reactive, WritableComputedRef } from "vue";
+import events from "./events";
 import { MarkLineData } from "./markline";
 import { FocusData } from "./useFocus";
 
@@ -90,6 +91,8 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
 
         document.addEventListener('mousemove', onMousemove);
         document.addEventListener('mouseup', onMouseup);
+
+        events.emit('dragStart');
     }
 
     const onMousemove = (e: MouseEvent) => {
@@ -147,6 +150,8 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         document.removeEventListener('mouseup', onMouseup);
         markline.x = null;
         markline.y = null;
+
+        events.emit('dragEnd');
     }
 
     return {

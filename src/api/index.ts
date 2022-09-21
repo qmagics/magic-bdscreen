@@ -15,7 +15,7 @@ export default {
     // 根据大屏id获取配置数据
     async getBDSDetail(id: string): Promise<RequestResponse<ConfigData>> {
         const { default: mockData } = await import('../mocks/data.json');
-        await sleep(1000);
+        await sleep(400);
 
         return {
             code: 1,
