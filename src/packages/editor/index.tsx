@@ -5,6 +5,7 @@ import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
 import ComponentLib from "./component-lib";
+import Markline from './markline';
 import { useMenuDragger } from "./useMenuDragger";
 import { useFocus } from './useFocus';
 import { useBlockItemDragger } from "./useBlockItemDragger";
@@ -47,7 +48,7 @@ export default defineComponent({
         const { triggerBlockItemMousedown, clearBlocksFocused, focusData, lastSelectedBlock } = useFocus({ configData, onBlockMousedown: e => triggerMousedown(e) });
 
         // 区块的拖拽管理
-        const { triggerMousedown } = useBlockItemDragger({ focusData, lastSelectedBlock });
+        const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
 
         return () => {
             return <div class="editor">
@@ -70,6 +71,8 @@ export default defineComponent({
                                     return <BlockItem class={{ 'is--focused': block.isFocused }} block={block} onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}></BlockItem>
                                 })
                             }
+
+                            <Markline data={markline}></Markline>
                         </div>
                     </div>
                 </div>
