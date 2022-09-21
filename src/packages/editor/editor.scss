@@ -32,6 +32,7 @@ body {
         align-items: center;
         justify-content: space-between;
         padding: 0 15px;
+        border-bottom: 1px solid $border-color-1;
 
         &-logo {
             display: flex;
@@ -49,8 +50,7 @@ body {
             }
         }
 
-        &-toolbar {
-        }
+        &-toolbar {}
     }
 
     &-left-sidebar,
@@ -81,7 +81,7 @@ body {
         &__wrapper {
             overflow: auto;
             height: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid $border-color-1;
             border-top: none;
             border-bottom: none;
             box-sizing: border-box;
@@ -102,14 +102,14 @@ body {
             top: 0;
             bottom: 0;
             width: 1px;
-            border-left: 1px dashed $mark-line-color;
+            border-left: 1px dashed $markline-color;
         }
 
         &-y {
             left: 0;
             right: 0;
             height: 1px;
-            border-top: 1px dashed $mark-line-color;
+            border-top: 1px dashed $markline-color;
         }
     }
 }
@@ -163,7 +163,7 @@ body {
     }
 
     .component-item {
-        border: 1px solid $border-color-1;
+        border: 1px dashed $border-color-1;
         border-radius: 3px;
         display: flex;
         align-items: center;
