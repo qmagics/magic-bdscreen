@@ -1,14 +1,15 @@
-import './editor.scss';
+import '@/styles/editor/index.scss';
 import { computed, defineComponent, PropType, ref, StyleValue } from "vue";
 import EditorHeader from './header';
 import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
 import ComponentLib from "./component-lib";
+import SidebarPanel from './sidebar-panel';
 import Markline from './markline';
-import { useMenuDragger } from "./useMenuDragger";
-import { useFocus } from './useFocus';
-import { useBlockItemDragger } from "./useBlockItemDragger";
+import { useMenuDragger } from "./hooks/useMenuDragger";
+import { useFocus } from './hooks/useFocus';
+import { useBlockItemDragger } from "./hooks/useBlockItemDragger";
 
 export default defineComponent({
     props: {
@@ -54,14 +55,14 @@ export default defineComponent({
             return <div class="editor">
                 <EditorHeader configData={configData}></EditorHeader>
                 <div class="editor-left-sidebar">
-                    <panel>
+                    <SidebarPanel>
                         {
                             {
                                 header: () => <div style={{ textAlign: 'center', fontWeight: "bold" }}>物料</div>,
                                 default: () => <ComponentLib onItemDragstart={triggerMenuItemDragstart} onItemDragend={triggerMenuItemDragend}></ComponentLib>
                             }
                         }
-                    </panel>
+                    </SidebarPanel>
                 </div>
                 <div class="editor-container">
                     <div class="editor-container__wrapper">

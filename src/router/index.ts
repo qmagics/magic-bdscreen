@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/home/index.vue'),
         props: true,
         meta: {
-            title: "大屏设计"
+            title: "首页"
         }
     },
     {

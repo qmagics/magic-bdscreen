@@ -1,15 +1,4 @@
-* {
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 14px;
-}
-
-body {
-    background-color: #393640;
-}
-
+// 编辑器
 .editor {
     position: fixed;
     left: $fixed-gutter;
@@ -50,7 +39,8 @@ body {
             }
         }
 
-        &-toolbar {}
+        &-toolbar {
+        }
     }
 
     &-left-sidebar,
@@ -74,7 +64,7 @@ body {
 
     &-container {
         background-color: $bg-color-1;
-        padding: $header-height $left-sidebar-width 0 $right-sidebar-width;
+        padding: $header-height $right-sidebar-width 0 $left-sidebar-width;
         box-sizing: border-box;
         height: 100%;
 
@@ -93,27 +83,9 @@ body {
         background-color: $bg-color-2;
         position: relative;
     }
-
-    .mark-line {
-        position: absolute;
-        z-index: 1;
-
-        &-x {
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            border-left: 1px dashed $markline-color;
-        }
-
-        &-y {
-            left: 0;
-            right: 0;
-            height: 1px;
-            border-top: 1px dashed $markline-color;
-        }
-    }
 }
 
+// 区块组件
 .block-item {
     position: absolute;
 
@@ -133,12 +105,17 @@ body {
     }
 }
 
+// 物料库组件
 .component-lib {
+    $menu-width: 90px;
+    $menu-item-height: 50px;
+    $component-item-size: 65px;
+
     display: flex;
     height: 100%;
 
     &__menu {
-        flex: 90px 0 0;
+        flex: $menu-width 0 0;
         border-right: 1px solid $border-color-1;
         display: flex;
         flex-direction: column;
@@ -149,32 +126,61 @@ body {
 
     &__content {
         flex: 1;
-        padding: $gutter;
+        padding: $gutter 0 $gutter $gutter;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-content: flex-start;
     }
 
     .menu-item {
         cursor: pointer;
-        height: 30px;
-        // font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: $component-item-size;
+        margin-bottom: $gutter;
+        cursor: pointer;
 
         &.is--active {
             color: $text-color-1;
         }
+
+        &__icon {
+            font-size: 24px;
+        }
+        &__name {
+            margin-top: 5px;
+        }
     }
 
     .component-item {
-        border: 1px dashed $border-color-1;
-        border-radius: 3px;
+        @include hover-mask;
+
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 50px;
+        flex-direction: column;
+        width: $component-item-size;
+        height: $component-item-size;
+        border-radius: 3px;
+        border: 1px dashed $border-color-2;
         margin-bottom: $gutter;
+        margin-right: $gutter;
+        cursor: grab;
 
-        @include hover-mask;
+        &__icon {
+            font-size: 20px;
+        }
+        &__name {
+            font-size: 13px;
+            margin-top: 5px;
+        }
     }
 }
 
+// 参考线组件
 .markline {
     position: absolute;
 
@@ -188,5 +194,24 @@ body {
         left: 0;
         right: 0;
         border-top: 1px dashed $markline-color;
+    }
+}
+
+// 侧边栏面板组件
+.sidebar-panel {
+    $header-height: 50px;
+
+    height: 100%;
+
+    &__header {
+        height: $header-height;
+        line-height: $header-height;
+        box-sizing: border-box;
+        border-bottom: 1px solid $border-color-1;
+    }
+
+    &__body {
+        height: calc(100% - #{$header-height});
+        overflow: auto;
     }
 }

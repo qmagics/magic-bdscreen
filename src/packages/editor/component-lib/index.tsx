@@ -1,14 +1,10 @@
 import useDesignStore from "@/store/design";
 import { ConfigData, RegisterComponent } from "@/types";
 import { MANAGER_KEY } from "@/utils/const";
-import { computed, defineComponent, inject, PropType, WritableComputedRef } from "vue";
+import { computed, defineComponent, inject } from "vue";
 
 export default defineComponent({
     emits: ['itemDragstart', 'itemDragend'],
-
-    // props: {
-    //     configData: Object as PropType<WritableComputedRef<ConfigData | undefined>>
-    // },
 
     setup: (props, { emit }) => {
         const manager = inject(MANAGER_KEY)!;
@@ -36,15 +32,20 @@ export default defineComponent({
                         componentCategories.map(cat => {
                             return <div
                                 class={['menu-item', { 'is--active': componentLib.activeCategory === cat.value }]}
-                                onClick={() => { componentLib.activeCategory = cat.value }}>{cat.name}</div>
+                                onClick={() => { componentLib.activeCategory = cat.value }}>
+                                <svg-icon class="menu-item__icon" name={cat.icon}></svg-icon>
+                                <span class="menu-item__name">{cat.name}</span>
+                            </div>
                         })
                     }
                 </div>
                 <div class="component-lib__content">
                     {currentComponentList.value.map(component => {
-                        const { preview } = manager.componentMap[component.type];
+                        // const { preview } = manager.componentMap[component.type];
                         return <div class="component-item" draggable onDragstart={e => onItemDragstart(e, component)} onDragend={e => onItemDragend(e, component)}>
-                            {preview()}
+                            {/* {preview()} */}
+                            <svg-icon class="component-item__icon" name={component.icon}></svg-icon>
+                            <span class="component-item__name">{component.name}</span>
                         </div>
                     })}
                 </div>

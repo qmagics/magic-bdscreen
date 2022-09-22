@@ -1,15 +1,25 @@
 import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import { onBeforeUnmount, WritableComputedRef } from "vue";
-import events from "./events";
+import events from "../events";
 
 export interface Command {
+    /** 指令名称 */
     name: string;
+
+    /** 指令运行内容 */
     execute: (...args: any) => { [key: string]: any; redo: Function };
+
+    /** 指令初始化执行方法 */
     init?: Function;
+
+    /** 指令键盘快捷键 */
     keycodes?: string;
+
+    /** 指令是否添加进操作队列（可实现撤销和重做） */
     pushQueue?: boolean;
 
+    /** 自定义属性 */
     [key: string]: any;
 }
 
@@ -30,10 +40,11 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>) => {
         destroyArray: []
     }
 
+    /** 注册命令*/
     const register = (command: Command) => {
         state.commandArray.push(command);
-        state.commands[command.name] = () => {
-            const { redo, undo } = command.execute();
+        state.commands[command.name] = (...args: any) => {
+            const { redo, undo } = command.execute(...args);
             redo();
 
             if (!command.pushQueue) return;
@@ -123,10 +134,62 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>) => {
         }
     });
 
+    // 更新整个配置文件
+    register({
+        name: "updateConfigData",
+        pushQueue: true,
+        execute(newConfigData) {
+            const before = configData.value;
+            const after = newConfigData;
+            return {
+                redo() {
+                    configData.value = after;
+                },
+                undo() {
+                    configData.value = before;
+                }
+            }
+        }
+    });
+
+    // 监控键盘快捷键
+    (() => {
+        const keyCodesMap: Record<number, string> = {
+            89: 'y',
+            90: 'z',
+        }
+
+        const onKeydown = (e: KeyboardEvent) => {
+            const { ctrlKey, keyCode } = e;
+            let keyString: string[] | string = [];
+
+            if (ctrlKey) { keyString.push('ctrl') }
+            keyString.push(keyCodesMap[keyCode]);
+            keyString = keyString.join('+');
+
+            state.commandArray.forEach(({ keycodes, name }) => {
+                if (!keycodes) return;
+                if (keycodes === keyString) {
+                    e.preventDefault();
+                    state.commands[name]();
+                }
+            })
+        }
+
+        const init = () => {
+            window.addEventListener('keydown', onKeydown);
+            return () => {
+                window.removeEventListener('keydown', onKeydown)
+            }
+        }
+
+        state.destroyArray.push(init());
+    })();
+
     // 统一执行command的init方法
     state.commandArray.forEach(command => command.init && state.destroyArray.push(command.init()));
 
-    // 统一执行command的init销毁方法
+    // 卸载时，统一执行command的init销毁方法
     onBeforeUnmount(() => {
         state.destroyArray.filter(v => v).forEach(destroy => destroy());
     });

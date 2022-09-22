@@ -1,7 +1,7 @@
 import { BlockData, ConfigData } from "@/types";
 import { ComputedRef, reactive, WritableComputedRef } from "vue";
-import events from "./events";
-import { MarkLineData } from "./markline";
+import events from "../events";
+import { MarkLineData } from "../markline";
 import { FocusData } from "./useFocus";
 
 interface UseBlockItemDraggerArgs {
@@ -15,6 +15,7 @@ interface DragState {
     startY: number;
     startLeft: number;
     startTop: number;
+    isDragging: boolean;
     startPosList: { left: number, top: number }[];
     lines: {
         x: { showLeft: number, left: number }[],
@@ -69,6 +70,7 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         startY: 0,
         startLeft: 0,
         startTop: 0,
+        isDragging: false,
         startPosList: [],
         lines: {
             x: [],
@@ -91,11 +93,15 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
 
         document.addEventListener('mousemove', onMousemove);
         document.addEventListener('mouseup', onMouseup);
-
-        events.emit('dragStart');
     }
 
     const onMousemove = (e: MouseEvent) => {
+        // 触发拖拽前事件
+        if (!dragState.isDragging) {
+            dragState.isDragging = true;
+            events.emit('dragStart');
+        }
+
         let { clientX: endX, clientY: endY } = e;
 
         // 最后一个选中区块的最新位置
@@ -151,7 +157,11 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         markline.x = null;
         markline.y = null;
 
-        events.emit('dragEnd');
+        // 触发拖拽后事件
+        if (dragState.isDragging) {
+            dragState.isDragging = false;
+            events.emit('dragEnd');
+        }
     }
 
     return {

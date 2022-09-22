@@ -40,6 +40,7 @@ export interface ConfigData {
 export interface RegisterComponent {
     name: string;
     type: string;
+    icon: string;
     category: string;
     preview: (...args: any) => any;
     render: (...args: any) => any;

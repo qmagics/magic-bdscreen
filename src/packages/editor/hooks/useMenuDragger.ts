@@ -1,6 +1,6 @@
 import { ConfigData, RegisterComponent } from "@/types";
 import { ref, Ref, WritableComputedRef } from "vue";
-import events from "./events";
+import events from "../events";
 
 interface UseMenuDraggerArgs {
     canvasRef: Ref<HTMLDivElement>;
