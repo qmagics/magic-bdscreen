@@ -53,7 +53,7 @@ export default defineComponent({
 
         return () => {
             return <div class="editor">
-                <EditorHeader configData={configData}></EditorHeader>
+                <EditorHeader configData={configData} focusData={focusData}></EditorHeader>
                 <div class="editor-left-sidebar">
                     <SidebarPanel>
                         {

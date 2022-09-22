@@ -1,7 +1,9 @@
 import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
+import { dataType } from "element-plus/es/components/table-v2/src/common";
 import { onBeforeUnmount, WritableComputedRef } from "vue";
 import events from "../events";
+import { FocusData } from "./useFocus";
 
 export interface Command {
     /** 指令名称 */
@@ -31,7 +33,7 @@ export interface UseCommandsState {
     destroyArray: Function[];
 }
 
-export const useCommands = (configData: WritableComputedRef<ConfigData>) => {
+export const useCommands = (configData: WritableComputedRef<ConfigData>, focusData: FocusData) => {
     const state: UseCommandsState = {
         current: -1,
         queue: [],
@@ -142,11 +144,73 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>) => {
             const before = configData.value;
             const after = newConfigData;
             return {
-                redo() {
+                redo: () => {
                     configData.value = after;
                 },
-                undo() {
+                undo: () => {
                     configData.value = before;
+                }
+            }
+        }
+    });
+
+    // 置顶
+    register({
+        name: "placeTop",
+        pushQueue: true,
+        execute() {
+            const before = deepClone(configData.value.blocks);
+
+            const after = (() => {
+                const { focused, unfocused } = focusData.value;
+
+                const maxZIndex = unfocused.reduce((pre, block) => Math.max(pre, block.zIndex), -Infinity);
+
+                focused.forEach(block => block.zIndex = maxZIndex + 1);
+
+                return configData.value.blocks;
+            })();
+
+            return {
+                redo: () => {
+                    configData.value = { ...configData.value, blocks: after };
+                },
+                undo: () => {
+                    configData.value = { ...configData.value, blocks: before };
+                }
+            }
+        }
+    });
+
+    // 置底
+    register({
+        name: "placeBottom",
+        pushQueue: true,
+        execute() {
+            const before = deepClone(configData.value.blocks);
+
+            const after = (() => {
+                const { focused, unfocused } = focusData.value;
+
+                let minZIndex = unfocused.reduce((pre, block) => Math.min(pre, block.zIndex), Infinity) - 1;
+
+                if (minZIndex < 0) {
+                    const delta = Math.abs(minZIndex);
+                    unfocused.forEach(block => block.zIndex += delta);
+                    minZIndex = 0;
+                }
+
+                focused.forEach(block => block.zIndex = minZIndex);
+
+                return configData.value.blocks;
+            })();
+
+            return {
+                redo: () => {
+                    configData.value = { ...configData.value, blocks: after };
+                },
+                undo: () => {
+                    configData.value = { ...configData.value, blocks: before };
                 }
             }
         }

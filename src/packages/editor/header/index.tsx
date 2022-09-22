@@ -5,17 +5,22 @@ import { ConfigData } from "@/types";
 import { useCommands } from "../hooks/useCommands";
 import { Dialog } from "@/components/dialog";
 import { ElInput } from "element-plus";
+import { FocusData } from "../hooks/useFocus";
 
 export default defineComponent({
     props: {
         configData: {
             required: true,
             type: Object as PropType<WritableComputedRef<ConfigData>>
+        },
+        focusData: {
+            required: true,
+            type: Object as PropType<FocusData>,
         }
     },
 
     setup: (props) => {
-        const { commands } = useCommands(props.configData);
+        const { commands } = useCommands(props.configData, props.focusData);
 
         const buttons = [
             {
@@ -68,6 +73,20 @@ export default defineComponent({
                             dlg.hide();
                         }
                     })
+                }
+            },
+            {
+                label: "置顶",
+                icon: 'place-top',
+                handler() {
+                    commands.placeTop();
+                }
+            },
+            {
+                label: "置底",
+                icon: "place-bottom",
+                handler() {
+                    commands.placeBottom();
                 }
             }
         ];
