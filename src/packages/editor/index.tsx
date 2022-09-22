@@ -58,9 +58,7 @@ export default defineComponent({
         const editorClass = computed(() => {
             return [
                 'editor',
-                {
-                    'is--preview': designStore.isPreView
-                }
+                designStore.isPreView ? 'is--preview' : 'is--editing'
             ]
         });
 

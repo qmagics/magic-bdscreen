@@ -65,7 +65,7 @@ export default defineComponent({
                     const dlg = Dialog<{ content: string }>({
                         title: "导入JSON",
                         data: {
-                            content: JSON.stringify(props.configData.value)
+                            content: ""
                         },
                         render(data) {
                             return <ElInput type="textarea" rows={10} v-model={data.content}></ElInput>
