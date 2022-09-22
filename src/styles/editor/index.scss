@@ -1,3 +1,5 @@
+@import "./var.scss";
+
 // 编辑器
 .editor {
     position: fixed;
@@ -48,18 +50,22 @@
         position: absolute;
         top: $header-height;
         bottom: 0;
+        overflow: hidden;
+        transition: all 0.3s;
     }
 
     &-left-sidebar {
         background-color: $bg-color-2;
         left: 0;
         width: $left-sidebar-width;
+        border-right: 1px solid $border-color-1;
     }
 
     &-right-sidebar {
         background-color: $bg-color-2;
         right: 0;
         width: $right-sidebar-width;
+        border-left: 1px solid $border-color-1;
     }
 
     &-container {
@@ -67,21 +73,40 @@
         padding: $header-height $right-sidebar-width 0 $left-sidebar-width;
         box-sizing: border-box;
         height: 100%;
+        transition: all 0.3s;
 
         &__wrapper {
             overflow: auto;
             height: 100%;
-            border: 1px solid $border-color-1;
-            border-top: none;
-            border-bottom: none;
+            // border: 1px solid $border-color-1;
+            // border-top: none;
+            // border-bottom: none;
             box-sizing: border-box;
         }
     }
 
-    &-canvas {
+    .editor-canvas {
         margin: $gutter auto;
         background-color: $bg-color-2;
         position: relative;
+    }
+
+    .preview-canvas {
+        margin: $gutter auto;
+        background-color: $bg-color-2;
+        position: relative;
+    }
+
+    &.is--preview {
+        .editor-left-sidebar {
+            transform: translateX(-100%);
+        }
+        .editor-right-sidebar {
+            transform: translateX(100%);
+        }
+        .editor-container {
+            padding: $header-height 0 0 0;
+        }
     }
 }
 

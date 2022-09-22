@@ -216,11 +216,32 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         }
     });
 
+    // 删除
+    register({
+        name: "delete",
+        pushQueue: true,
+        keycodes: "delete",
+        execute() {
+            const before = deepClone(configData.value.blocks);
+            const after = focusData.value.unfocused;
+
+            return {
+                redo: () => {
+                    configData.value = { ...configData.value, blocks: after };
+                },
+                undo: () => {
+                    configData.value = { ...configData.value, blocks: before };
+                }
+            }
+        }
+    });
+
     // 监控键盘快捷键
     (() => {
         const keyCodesMap: Record<number, string> = {
             89: 'y',
             90: 'z',
+            46: 'delete'
         }
 
         const onKeydown = (e: KeyboardEvent) => {

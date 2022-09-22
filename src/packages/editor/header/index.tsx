@@ -6,6 +6,14 @@ import { useCommands } from "../hooks/useCommands";
 import { Dialog } from "@/components/dialog";
 import { ElInput } from "element-plus";
 import { FocusData } from "../hooks/useFocus";
+import useDesignStore from "@/store/design";
+
+interface ButtonData {
+    label: string | (() => string);
+    icon: string | (() => string);
+    type?: string;
+    handler: Function;
+}
 
 export default defineComponent({
     props: {
@@ -20,22 +28,19 @@ export default defineComponent({
     },
 
     setup: (props) => {
+        const designStore = useDesignStore();
         const { commands } = useCommands(props.configData, props.focusData);
 
-        const buttons = [
+        const buttons: ButtonData[] = [
             {
                 label: "撤销",
                 icon: "undo",
-                handler() {
-                    commands.undo();
-                }
+                handler: () => commands.undo()
             },
             {
                 label: "重做",
                 icon: "redo",
-                handler() {
-                    commands.redo();
-                }
+                handler: () => commands.redo()
             },
             {
                 label: "导出",
@@ -78,15 +83,24 @@ export default defineComponent({
             {
                 label: "置顶",
                 icon: 'place-top',
-                handler() {
-                    commands.placeTop();
-                }
+                handler: () => commands.placeTop()
             },
             {
                 label: "置底",
                 icon: "place-bottom",
-                handler() {
-                    commands.placeBottom();
+                handler: () => commands.placeBottom()
+            },
+            {
+                label: "删除",
+                icon: "delete",
+                handler: () => commands.delete()
+            },
+            {
+                label: () => designStore.isPreView ? '设计' : '预览',
+                icon: () => designStore.isPreView ? 'edit' : 'preview',
+                type: "primary",
+                handler: () => {
+                    designStore.toggleIsPreview();
                 }
             }
         ];
@@ -99,9 +113,11 @@ export default defineComponent({
                 </div>
                 <div class="editor-header-toolbar">
                     <div>
-                        {buttons.map(btn => <el-button onClick={() => btn.handler && btn.handler()}>{btn.label}</el-button>)}
-                        <el-button type="success">预览</el-button>
-                        <el-button type="primary">保存</el-button>
+                        {buttons.map(btn => {
+                            const icon = typeof btn.icon === 'function' ? btn.icon() : btn.icon;
+                            const label = typeof btn.label === 'function' ? btn.label() : btn.label;
+                            return <el-button type={btn.type} onClick={() => btn.handler && btn.handler()}>{label}</el-button>
+                        })}
                     </div>
                 </div>
             </div>

@@ -10,6 +10,7 @@ import Markline from './markline';
 import { useMenuDragger } from "./hooks/useMenuDragger";
 import { useFocus } from './hooks/useFocus';
 import { useBlockItemDragger } from "./hooks/useBlockItemDragger";
+import useDesignStore from '@/store/design';
 
 export default defineComponent({
     props: {
@@ -20,6 +21,8 @@ export default defineComponent({
     },
     emits: ['update:modelValue'],
     setup: (props, { emit }) => {
+
+        const designStore = useDesignStore();
 
         // 配置数据代理对象
         const configData = computed({
@@ -51,8 +54,47 @@ export default defineComponent({
         // 区块的拖拽管理
         const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
 
+        // 编辑器classNames 
+        const editorClass = computed(() => {
+            return [
+                'editor',
+                {
+                    'is--preview': designStore.isPreView
+                }
+            ]
+        });
+
         return () => {
-            return <div class="editor">
+
+            // 编辑画布
+            const editorCanvas = (
+                <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef} onMousedown={clearBlocksFocused}>
+                    {
+                        configData.value?.blocks.map((block, index) => {
+                            return <BlockItem
+                                class={{ 'is--focused': block.isFocused }}
+                                block={block}
+                                onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
+                            ></BlockItem>
+                        })
+                    }
+
+                    <Markline data={markline}></Markline>
+                </div>
+            )
+
+            // 预览画布
+            const previewCanvas = (
+                <div class="preview-canvas" style={canvasStyle.value}>
+                    {
+                        configData.value?.blocks.map((block) => {
+                            return <BlockItem block={block}></BlockItem>
+                        })
+                    }
+                </div>
+            )
+
+            return <div class={editorClass.value}>
                 <EditorHeader configData={configData} focusData={focusData}></EditorHeader>
                 <div class="editor-left-sidebar">
                     <SidebarPanel>
@@ -66,19 +108,7 @@ export default defineComponent({
                 </div>
                 <div class="editor-container">
                     <div class="editor-container__wrapper">
-                        <div class="editor-canvas" style={canvasStyle.value} ref={canvasRef} onMousedown={clearBlocksFocused}>
-                            {
-                                configData.value?.blocks.map((block, index) => {
-                                    return <BlockItem
-                                        class={{ 'is--focused': block.isFocused }}
-                                        block={block}
-                                        onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
-                                    ></BlockItem>
-                                })
-                            }
-
-                            <Markline data={markline}></Markline>
-                        </div>
+                        {designStore.isPreView ? previewCanvas : editorCanvas}
                     </div>
                 </div>
                 <div class="editor-right-sidebar">
