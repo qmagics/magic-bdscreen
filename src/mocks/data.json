@@ -8,18 +8,21 @@
         },
         "blocks": [
             {
+                "props": {},
                 "type": "text",
                 "left": 100,
                 "top": 100,
                 "zIndex": 1
             },
             {
+                "props": {},
                 "type": "button",
                 "left": 200,
                 "top": 100,
                 "zIndex": 1
             },
             {
+                "props": {},
                 "type": "input",
                 "left": 200,
                 "top": 200,
@@ -36,18 +39,21 @@
         },
         "blocks": [
             {
+                "props": {},
                 "type": "button",
                 "left": 100,
                 "top": 100,
                 "zIndex": 1
             },
             {
+                "props": {},
                 "type": "button",
                 "left": 200,
                 "top": 100,
                 "zIndex": 1
             },
             {
+                "props": {},
                 "type": "button",
                 "left": 300,
                 "top": 200,

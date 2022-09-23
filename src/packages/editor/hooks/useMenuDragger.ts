@@ -1,5 +1,6 @@
+import { MANAGER_KEY } from "@/packages/tokens";
 import { ConfigData, RegisterComponent } from "@/types";
-import { ref, Ref, WritableComputedRef } from "vue";
+import { inject, ref, Ref, WritableComputedRef } from "vue";
 import events from "../events";
 
 interface UseMenuDraggerArgs {
@@ -9,12 +10,14 @@ interface UseMenuDraggerArgs {
 
 export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) => {
 
+    const manager = inject(MANAGER_KEY)!;
+
     const currentComponent = ref<RegisterComponent | null>();
 
     const onDragenter = (e: DragEvent) => {
         e.dataTransfer!.dropEffect = 'move';
     }
-    
+
     const onDragover = (e: DragEvent) => {
         e.preventDefault();
     }
@@ -26,6 +29,8 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
     const onDrop = (e: DragEvent) => {
         const blocks = configData.value.blocks;
 
+        const defaultProps = manager.getComponentDefaultProps(currentComponent.value!.type);
+
         const newConfigData = {
             ...configData.value,
             blocks: [
@@ -35,16 +40,17 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
                     left: e.offsetX,
                     zIndex: 1,
                     type: currentComponent.value!.type,
-                    alignCenterWhenDrop: true
+                    alignCenterWhenDrop: true,
+                    props: defaultProps
                 }
             ]
         }
 
         configData.value = newConfigData;
-        
+
         currentComponent.value = null;
     }
-    
+
     // 触发物料的拖拽开始事件
     const triggerMenuItemDragstart = (e: Event, component: RegisterComponent) => {
         canvasRef.value.addEventListener('dragenter', onDragenter);
@@ -64,7 +70,7 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
         canvasRef.value.removeEventListener('drop', onDrop);
 
         events.emit('dragEnd');
-    } 
+    }
 
     return {
         triggerMenuItemDragstart,

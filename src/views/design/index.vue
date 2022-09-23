@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import editor from '@/packages/editor/index';
+import { MANAGER_KEY } from '@/packages/tokens';
 import Api from '@/api/index';
-import { MANAGER_KEY } from '@/utils/const';
 import { provide, reactive, ref } from 'vue';
 import manager from '@/packages/manager';
 

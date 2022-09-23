@@ -1,5 +1,5 @@
+import { MANAGER_KEY } from "@/packages/tokens";
 import { BlockData } from "@/types";
-import { MANAGER_KEY } from "@/utils/const";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
 
 // 校正和补充元素属性
@@ -44,7 +44,7 @@ export default defineComponent({
             const { componentMap } = manager;
             const { render } = componentMap[props.block.type];
 
-            const renderedComponent = render();
+            const renderedComponent = render({ props: props.block.props || {} });
 
             return <div class="block-item" ref={blockRef} style={blockStyle.value}>
                 {renderedComponent}

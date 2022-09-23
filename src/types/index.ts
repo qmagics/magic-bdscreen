@@ -1,8 +1,10 @@
+/** 容器配置数据 */
 export interface ContainerData {
     width: number;
     height: number;
 }
 
+/** 区块配置数据 */
 export interface BlockData {
     /** 组件类型 */
     type: string;
@@ -27,8 +29,12 @@ export interface BlockData {
 
     /** 是否选中 */
     isFocused?: boolean;
+
+    /** 组件属性 */
+    props: Record<string, any>;
 }
 
+/** 大屏配置数据 */
 export interface ConfigData {
     id: string;
     title: string;
@@ -37,13 +43,15 @@ export interface ConfigData {
 }
 
 /** 注册组件 */
-export interface RegisterComponent {
+export interface RegisterComponent<Props = any> {
     name: string;
     type: string;
     icon: string;
     category: string;
     preview: (...args: any) => any;
-    render: (...args: any) => any;
+    render: ({ props }: { props: Props }) => any;
+    props?: Props | Record<string, any>;
+    defaultProps?: Props | Record<string, any>;
 }
 
 export interface ComponentCategory {

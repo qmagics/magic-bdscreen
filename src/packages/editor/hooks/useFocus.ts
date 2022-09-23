@@ -16,7 +16,9 @@ export const useFocus = ({ configData, onBlockMousedown }: UseFocusArgs) => {
     const selectedIndex = ref(-1);
 
     // 最后选中的block
-    const lastSelectedBlock = computed(() => configData.value.blocks[selectedIndex.value]);
+    const lastSelectedBlock = computed(() => {
+        return configData.value.blocks[selectedIndex.value]
+    });
 
     // 选中和未选中数据
     const focusData: FocusData = computed(() => {

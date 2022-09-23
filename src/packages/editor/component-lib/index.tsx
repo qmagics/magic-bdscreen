@@ -1,6 +1,6 @@
+import { MANAGER_KEY } from "@/packages/tokens";
 import useDesignStore from "@/store/design";
-import { ConfigData, RegisterComponent } from "@/types";
-import { MANAGER_KEY } from "@/utils/const";
+import { RegisterComponent } from "@/types";
 import { computed, defineComponent, inject } from "vue";
 
 export default defineComponent({

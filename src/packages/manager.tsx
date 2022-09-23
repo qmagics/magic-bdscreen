@@ -1,8 +1,8 @@
+import registerComponents from '@/config/registerComponents';
 import { ComponentCategory, RegisterComponent } from '@/types';
-import { ElButton, ElImage, ElInput } from 'element-plus';
+import { deepClone } from '@/utils';
 
 export class Manager {
-
     public componentCategories: ComponentCategory[] = [
         { name: '基础', value: 'basic', icon: 'basic' },
         { name: '布局', value: 'layout', icon: 'layout' },
@@ -10,54 +10,38 @@ export class Manager {
         { name: '图表', value: 'chart', icon: 'chart' },
     ];
 
-    public componentList: RegisterComponent[] = [];
+    public componentList: RegisterComponent<any>[] = [];
 
-    public componentMap: Record<RegisterComponent['type'], RegisterComponent> = {};
+    public componentMap: Record<RegisterComponent<any>['type'], RegisterComponent<any>> = {};
 
     constructor() { }
 
-    public registerComponent(component: RegisterComponent) {
+    public registerComponent<Props = any>(component: RegisterComponent<Props>) {
         this.componentList.push(component);
         this.componentMap[component.type] = component;
+    }
+
+    /**
+     * 根据组件类型获取默认props
+     * @param componentType 
+     */
+    public getComponentDefaultProps(componentType: string) {
+        const component = this.componentMap[componentType];
+        return deepClone(component.defaultProps);
+    }
+
+    /**
+    * 根据组件类型获取props
+    * @param componentType 
+    */
+    public getComponentProps(componentType: string) {
+        const component = this.componentMap[componentType];
+        return component.props;
     }
 }
 
 const manager = new Manager();
 
-manager.registerComponent({
-    name: "文本",
-    type: "text",
-    icon: "text",
-    category: "basic",
-    preview: () => <span>文本</span>,
-    render: () => <span>渲染文本</span>,
-})
-
-manager.registerComponent({
-    name: "按钮",
-    type: "button",
-    icon: "button",
-    category: "basic",
-    preview: () => <ElButton>按钮</ElButton>,
-    render: () => <ElButton type="primary">渲染按钮</ElButton>,
-})
-
-manager.registerComponent({
-    name: "图片",
-    type: "image",
-    icon: "image",
-    category: "basic",
-    preview: () => <ElImage></ElImage>,
-    render: () => <ElImage></ElImage>,
-})
-
-manager.registerComponent({
-    name: "输入框",
-    type: "input",
-    icon: "input",
-    category: "input",
-    preview: () => <ElInput></ElInput>,
-    render: () => <ElInput></ElInput>,
-})
+registerComponents(manager);
 
 export default manager;

@@ -6,6 +6,7 @@ import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
 import ComponentLib from "./component-lib";
 import SidebarPanel from './sidebar-panel';
+import PropsEditor from './props-editor';
 import Markline from './markline';
 import { useMenuDragger } from "./hooks/useMenuDragger";
 import { useFocus } from './hooks/useFocus';
@@ -64,11 +65,11 @@ export default defineComponent({
 
         // 区块的拖拽管理
         const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
-        
+
         // 命令管理
         const { commands } = useCommands(configData, focusData);
         provide(COMMANDS_KEY, commands);
-        
+
         // 区块右键菜单管理
         const { triggerContextmenu } = useBlockItemContextmenu(commands);
 
@@ -103,26 +104,43 @@ export default defineComponent({
                 </div>
             )
 
-            return <div class={editorClass.value}>
-                <EditorHeader configData={configData}></EditorHeader>
-                <div class="editor-left-sidebar">
-                    <SidebarPanel>
+            // 左侧边兰
+            const leftSidebar = (
+                <SidebarPanel>
+                    {
                         {
-                            {
-                                header: () => <div style={{ textAlign: 'center', fontWeight: "bold" }}>物料</div>,
-                                default: () => <ComponentLib onItemDragstart={triggerMenuItemDragstart} onItemDragend={triggerMenuItemDragend}></ComponentLib>
-                            }
+                            header: () => <div style={{ textAlign: 'center', fontWeight: "bold" }}>物料</div>,
+                            default: () => <ComponentLib onItemDragstart={triggerMenuItemDragstart} onItemDragend={triggerMenuItemDragend}></ComponentLib>
                         }
-                    </SidebarPanel>
-                </div>
+                    }
+                </SidebarPanel>
+            );
+
+            // 右侧边兰
+            const rightSidebar = (
+                <SidebarPanel>
+                    {
+                        {
+                            header: () => configData.value ? <div style={{ textAlign: "center" }}>{lastSelectedBlock?.value ? '控件属性' : '容器属性'}</div> : null,
+                            default: () => configData.value ? <PropsEditor configData={configData} block={lastSelectedBlock}></PropsEditor> : null
+                        }
+                    }
+                </SidebarPanel>
+            )
+
+            return <div class={editorClass.value}>
+
+                <EditorHeader configData={configData}></EditorHeader>
+
+                <div class="editor-left-sidebar">{leftSidebar}</div>
+
                 <div class="editor-container">
                     <div class="editor-container__wrapper">
                         {designStore.isPreView ? previewCanvas : editorCanvas}
                     </div>
                 </div>
-                <div class="editor-right-sidebar">
 
-                </div>
+                <div class="editor-right-sidebar">{rightSidebar}</div>
             </div>
         }
     },
