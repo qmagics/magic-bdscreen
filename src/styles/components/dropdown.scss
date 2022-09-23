@@ -1,0 +1,12 @@
+.dropdown {
+    display: none;
+    position: absolute;
+    box-shadow: 2px 2px 6px 3px rgba(0, 0, 0, 0.2);
+    background-color: rgb(48, 48, 49);
+    padding: 10px 0;
+    border-radius: 3px;
+
+    &.is--show {
+        display: block;
+    }
+}

@@ -7,7 +7,7 @@ export interface DialogOptions<DataT = any> {
     renderHeader?: (data: DataT) => VNode;
     renderFooter?: (data: DataT) => VNode;
 
-    data?: Record<string | number, any>;
+    data?: DataT;
     onConfirm?: (data: DataT) => any;
     onCancel?: Function;
     btns?: boolean | string[] | any[];

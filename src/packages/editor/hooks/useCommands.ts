@@ -1,4 +1,4 @@
-import { ConfigData } from "@/types";
+import { BlockData, ConfigData } from "@/types";
 import { deepClone } from "@/utils";
 import { dataType } from "element-plus/es/components/table-v2/src/common";
 import { onBeforeUnmount, WritableComputedRef } from "vue";
@@ -235,6 +235,35 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
             }
         }
     });
+
+    // 更新单个区块数据
+    register({
+        name: "updateBlock",
+        pushQueue: true,
+        execute(newBlock: BlockData, oldBlock: BlockData) {
+            const before = configData.value.blocks;
+
+            const after = (() => {
+                const blocks = [...configData.value.blocks];
+                const index = configData.value.blocks.indexOf(oldBlock);
+                if (index > -1) {
+                    blocks.splice(index, 1, newBlock);
+                }
+
+                return blocks;
+            })();
+
+            return {
+                redo: () => {
+                    configData.value = { ...configData.value, blocks: after }
+                },
+                undo: () => {
+                    configData.value = { ...configData.value, blocks: before }
+                }
+            }
+        }
+    });
+
 
     // 监控键盘快捷键
     (() => {

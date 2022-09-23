@@ -1,5 +1,5 @@
 import '@/styles/editor/index.scss';
-import { computed, defineComponent, PropType, ref, StyleValue } from "vue";
+import { computed, defineComponent, PropType, provide, ref, StyleValue } from "vue";
 import EditorHeader from './header';
 import { ConfigData } from "@/types";
 import { deepClone } from "@/utils";
@@ -11,6 +11,9 @@ import { useMenuDragger } from "./hooks/useMenuDragger";
 import { useFocus } from './hooks/useFocus';
 import { useBlockItemDragger } from "./hooks/useBlockItemDragger";
 import useDesignStore from '@/store/design';
+import { useBlockItemContextmenu } from './hooks/useBlockItemContextmenu';
+import { useCommands } from './hooks/useCommands';
+import { COMMANDS_KEY } from '../tokens';
 
 export default defineComponent({
     props: {
@@ -34,6 +37,17 @@ export default defineComponent({
             }
         });
 
+        // 编辑器classNames 
+        const editorClass = computed(() => {
+            return [
+                'editor',
+                designStore.isPreView ? 'is--preview' : 'is--editing'
+            ]
+        });
+
+        // 画布元素
+        const canvasRef = ref();
+
         // 画布样式
         const canvasStyle = computed<StyleValue>(() => {
             return {
@@ -41,9 +55,6 @@ export default defineComponent({
                 height: `${configData.value?.container.height}px`,
             }
         });
-
-        // 画布元素
-        const canvasRef = ref();
 
         // 物料库拖拽管理
         const { triggerMenuItemDragstart, triggerMenuItemDragend } = useMenuDragger({ canvasRef, configData });
@@ -53,14 +64,13 @@ export default defineComponent({
 
         // 区块的拖拽管理
         const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
-
-        // 编辑器classNames 
-        const editorClass = computed(() => {
-            return [
-                'editor',
-                designStore.isPreView ? 'is--preview' : 'is--editing'
-            ]
-        });
+        
+        // 命令管理
+        const { commands } = useCommands(configData, focusData);
+        provide(COMMANDS_KEY, commands);
+        
+        // 区块右键菜单管理
+        const { triggerContextmenu } = useBlockItemContextmenu(commands);
 
         return () => {
 
@@ -73,6 +83,7 @@ export default defineComponent({
                                 class={{ 'is--focused': block.isFocused }}
                                 block={block}
                                 onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
+                                onContextmenu={(e: MouseEvent) => triggerContextmenu(e, block)}
                             ></BlockItem>
                         })
                     }
@@ -93,7 +104,7 @@ export default defineComponent({
             )
 
             return <div class={editorClass.value}>
-                <EditorHeader configData={configData} focusData={focusData}></EditorHeader>
+                <EditorHeader configData={configData}></EditorHeader>
                 <div class="editor-left-sidebar">
                     <SidebarPanel>
                         {

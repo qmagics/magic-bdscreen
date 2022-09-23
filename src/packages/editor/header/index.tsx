@@ -1,12 +1,11 @@
-import { defineComponent, PropType, WritableComputedRef } from "vue";
+import { defineComponent, inject, PropType, WritableComputedRef } from "vue";
 import config from '@/config';
 import logo from '@/assets/logo.svg';
 import { ConfigData } from "@/types";
-import { useCommands } from "../hooks/useCommands";
 import { Dialog } from "@/components/dialog";
 import { ElInput } from "element-plus";
-import { FocusData } from "../hooks/useFocus";
 import useDesignStore from "@/store/design";
+import { COMMANDS_KEY } from "@/packages/tokens";
 
 interface ButtonData {
     label: string | (() => string);
@@ -20,16 +19,13 @@ export default defineComponent({
         configData: {
             required: true,
             type: Object as PropType<WritableComputedRef<ConfigData>>
-        },
-        focusData: {
-            required: true,
-            type: Object as PropType<FocusData>,
         }
     },
 
     setup: (props) => {
         const designStore = useDesignStore();
-        const { commands } = useCommands(props.configData, props.focusData);
+
+        const commands = inject(COMMANDS_KEY)!;
 
         const buttons: ButtonData[] = [
             {

@@ -2,6 +2,7 @@ import { BlockData } from "@/types";
 import { MANAGER_KEY } from "@/utils/const";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
 
+// 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
     onMounted(() => {
         const { clientWidth, clientHeight } = blockRef.value!;
@@ -37,7 +38,6 @@ export default defineComponent({
             }
         });
 
-        // 校正和补充元素属性
         useAdjustElement(props.block, blockRef);
 
         return () => {
