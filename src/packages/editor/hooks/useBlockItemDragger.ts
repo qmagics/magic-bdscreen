@@ -99,7 +99,7 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         // 触发拖拽前事件
         if (!dragState.isDragging) {
             dragState.isDragging = true;
-            events.emit('dragStart');
+            events.emit('dragMoveStart');
         }
 
         let { clientX: endX, clientY: endY } = e;
@@ -160,7 +160,7 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         // 触发拖拽后事件
         if (dragState.isDragging) {
             dragState.isDragging = false;
-            events.emit('dragEnd');
+            events.emit('dragMoveEnd', lastSelectedBlock.value);
         }
     }
 

@@ -82,6 +82,7 @@
             // border-top: none;
             // border-bottom: none;
             box-sizing: border-box;
+            position: relative;
         }
     }
 
@@ -250,4 +251,34 @@
 // 属性编辑器
 .props-editor {
     padding: $gutter;
+}
+
+// 历史记录面板
+.action-history {
+    width: 160px;
+    height: 200px;
+    position: absolute;
+    right: $gutter;
+    bottom: $gutter;
+    background-color: $bg-color-2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 0;
+    border-radius: 3px;
+    border: $border-color-2;
+
+    &-item {
+        padding: 0 10px;
+        height: 24px;
+        line-height: 24px;
+        cursor: pointer;
+        &:hover {
+            background-color: rgb(43, 43, 43);
+        }
+
+        &.is--current {
+            background-color: rgb(63, 63, 63);
+            color: $text-color-1;
+        }
+    }
 }

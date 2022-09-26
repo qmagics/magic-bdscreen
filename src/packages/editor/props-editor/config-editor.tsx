@@ -1,6 +1,8 @@
+import { COMMANDS_KEY } from "@/packages/tokens";
 import { ConfigData } from "@/types";
+import { deepClone } from "@/utils";
 import { ElForm, ElFormItem, ElInputNumber } from "element-plus";
-import { defineComponent, PropType, WritableComputedRef } from "vue";
+import { defineComponent, inject, PropType, reactive, watch, WritableComputedRef } from "vue";
 
 export default defineComponent({
     props: {
@@ -10,15 +12,23 @@ export default defineComponent({
         }
     },
     setup(props) {
+        const commands = inject(COMMANDS_KEY)!;
+
         return () => {
             const { container } = props.configData.value;
 
-            return <ElForm model={container} labelWidth="100px" labelPosition="top">
+            const containerData = reactive(deepClone(container));
+
+            watch(containerData, newContainerData => {
+                commands.updateConfigData({ ...props.configData.value, container: newContainerData });
+            });
+
+            return <ElForm model={containerData} labelWidth="100px" labelPosition="top">
                 <ElFormItem label="页面宽度" prop="width">
-                    <ElInputNumber v-model={container.width} />
+                    <ElInputNumber v-model={containerData.width} />
                 </ElFormItem>
                 <ElFormItem label="页面高度" prop="height">
-                    <ElInputNumber v-model={container.height} />
+                    <ElInputNumber v-model={containerData.height} />
                 </ElFormItem>
             </ElForm>
         }

@@ -15,6 +15,7 @@ import useDesignStore from '@/store/design';
 import { useBlockItemContextmenu } from './hooks/useBlockItemContextmenu';
 import { useCommands } from './hooks/useCommands';
 import { COMMANDS_KEY } from '../tokens';
+import ActionHistory from './action-history';
 
 export default defineComponent({
     props: {
@@ -67,11 +68,11 @@ export default defineComponent({
         const { triggerMousedown, markline } = useBlockItemDragger({ configData, focusData, lastSelectedBlock });
 
         // 命令管理
-        const { commands } = useCommands(configData, focusData);
-        provide(COMMANDS_KEY, commands);
+        const commandsState = useCommands(configData, focusData);
+        provide(COMMANDS_KEY, commandsState.commands);
 
         // 区块右键菜单管理
-        const { triggerContextmenu } = useBlockItemContextmenu(commands);
+        const { triggerContextmenu } = useBlockItemContextmenu(commandsState.commands);
 
         return () => {
 
@@ -137,6 +138,7 @@ export default defineComponent({
                 <div class="editor-container">
                     <div class="editor-container__wrapper">
                         {designStore.isPreView ? previewCanvas : editorCanvas}
+                        <ActionHistory commandsState={commandsState}></ActionHistory>
                     </div>
                 </div>
 

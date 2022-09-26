@@ -41,7 +41,7 @@ export default (manager: Manager) => {
                 { label: "信息", value: "info" },
                 { label: "文字", value: "text" },
             ]),
-            size: createSelectProp('大小', [
+            size: createSelectProp('尺寸', [
                 { label: "小", value: "small" },
                 { label: "默认", value: "default" },
                 { label: "大", value: "large" },
@@ -61,7 +61,7 @@ export default (manager: Manager) => {
         icon: "image",
         category: "basic",
         preview: () => <ElImage></ElImage>,
-        render: ({ props }) => <ElImage style={{ width: '100px', height: '100px' }} src={props.src}></ElImage>,
+        render: ({ props }) => <ElImage style={{ width: props.width + 'px', height: props.height + 'px' }} src={props.src}></ElImage>,
         props: {
             width: createInputNumberProp('宽度'),
             height: createInputNumberProp('高度'),
@@ -83,7 +83,21 @@ export default (manager: Manager) => {
         preview: () => <ElInput></ElInput>,
         render: () => <ElInput></ElInput>,
         props: {
+            placeholder: createInputProp('占位文本'),
+            size: createSelectProp('尺寸', [
+                { label: "小", value: "small" },
+                { label: "默认", value: "default" },
+                { label: "大", value: "large" },
+            ]),
+        },
+        defaultProps: {
+            placeholder: "请输入内容",
+            size: "default"
+        },
+        // model: {
+        //     default: {
 
-        }
+        //     }
+        // }
     })
 }

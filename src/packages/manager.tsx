@@ -22,11 +22,21 @@ export class Manager {
     }
 
     /**
+     * 根据组件类型获取组件对象
+     * @param componentType 
+     * @returns 
+     */
+    public getComponentByType(componentType: string) {
+        const component = this.componentMap[componentType];
+        return component;
+    }
+
+    /**
      * 根据组件类型获取默认props
      * @param componentType 
      */
     public getComponentDefaultProps(componentType: string) {
-        const component = this.componentMap[componentType];
+        const component = this.getComponentByType(componentType);
         return deepClone(component.defaultProps);
     }
 
@@ -35,9 +45,11 @@ export class Manager {
     * @param componentType 
     */
     public getComponentProps(componentType: string) {
-        const component = this.componentMap[componentType];
+        const component = this.getComponentByType(componentType);
         return component.props;
     }
+
+
 }
 
 const manager = new Manager();

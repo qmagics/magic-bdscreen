@@ -1,16 +1,17 @@
-import { BlockData, ConfigData } from "@/types";
+import { MANAGER_KEY } from "@/packages/tokens";
+import { BlockData, ConfigData, RegisterComponent } from "@/types";
 import { deepClone } from "@/utils";
-import { dataType } from "element-plus/es/components/table-v2/src/common";
-import { onBeforeUnmount, WritableComputedRef } from "vue";
+import { inject, onBeforeUnmount, reactive, WritableComputedRef } from "vue";
 import events from "../events";
 import { FocusData } from "./useFocus";
 
+/** 指令 */
 export interface Command {
     /** 指令名称 */
     name: string;
 
     /** 指令运行内容 */
-    execute: (...args: any) => { [key: string]: any; redo: Function };
+    execute: (...args: any) => { redo: Function; queueName?: string;[key: string]: any; };
 
     /** 指令初始化执行方法 */
     init?: Function;
@@ -21,32 +22,45 @@ export interface Command {
     /** 指令是否添加进操作队列（可实现撤销和重做） */
     pushQueue?: boolean;
 
+    /** 在队列中显示的名称（用于展示历史操作） */
+    queueName?: string;
+
     /** 自定义属性 */
     [key: string]: any;
 }
 
+/** 操作记录 */
+export interface CommandAction {
+    undo: Function;
+    redo: Function;
+    queueName?: string;
+}
+
 export interface UseCommandsState {
     current: number;
-    queue: { undo: Function, redo: Function }[];
+    queue: CommandAction[];
     commands: Record<string, Function>;
     commandArray: Command[];
     destroyArray: Function[];
 }
 
 export const useCommands = (configData: WritableComputedRef<ConfigData>, focusData: FocusData) => {
-    const state: UseCommandsState = {
+
+    const manager = inject(MANAGER_KEY)!;
+
+    const state: UseCommandsState = reactive({
         current: -1,
         queue: [],
         commands: {},
         commandArray: [],
         destroyArray: []
-    }
+    })
 
     /** 注册命令*/
     const register = (command: Command) => {
         state.commandArray.push(command);
         state.commands[command.name] = (...args: any) => {
-            const { redo, undo } = command.execute(...args);
+            const { redo, undo, queueName } = command.execute(...args);
             redo();
 
             if (!command.pushQueue) return;
@@ -61,10 +75,29 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
                 state.queue = queue;
             }
 
-            queue.push({ redo, undo });
+            queue.push({ redo, undo, queueName: queueName || command.queueName });
             state.current = current + 1;
         }
     }
+
+    // 根据索引重做队列中的某个操作
+    register({
+        name: "applyQueue",
+        execute(index: number) {
+            return {
+                redo() {
+                    if (index === -1) return;
+
+                    const item = state.queue[index];
+
+                    if (item) {
+                        item.redo();
+                        state.current = index;
+                    }
+                }
+            }
+        }
+    });
 
     // 重做
     register({
@@ -90,8 +123,9 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         keycodes: 'ctrl+z',
         execute() {
             return {
-                redo() {
-                    if (state.current == -1) return;
+                redo: () => {
+                    if (state.current === -1) return;
+
                     const item = state.queue[state.current];
 
                     if (item) {
@@ -103,29 +137,31 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         }
     });
 
-    // 拖拽事件（包括：从物料库拖拽进画布 和 对画布中区块的拖拽）
+    // 拖拽添加（从物料库拖拽组件到画布中）
     register({
-        name: "drag",
+        name: "dragAdd",
         pushQueue: true,
+        queueName: "添加",
         init() {
             this.before = null;
 
             const start = () => this.before = deepClone(configData.value.blocks);
 
-            const end = () => state.commands.drag();
+            const end = (component: any) => state.commands.dragAdd(component);
 
-            events.on('dragStart', start);
-            events.on('dragEnd', end);
+            events.on('dragAddStart', start);
+            events.on('dragAddEnd', end);
 
             return () => {
-                events.off('dragStart', start);
-                events.off('dragEnd', end);
+                events.off('dragAddStart', start);
+                events.off('dragAddEnd', end);
             }
         },
-        execute() {
+        execute(component: RegisterComponent) {
             const before = this.before;
             const after = configData.value.blocks;
             return {
+                queueName: `${this.queueName}<${component.name}>`,
                 redo() {
                     configData.value = { ...configData.value, blocks: after };
                 },
@@ -136,12 +172,51 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         }
     });
 
-    // 更新整个配置文件
+    // 拖拽移动（对画布中区块的拖拽）
+    register({
+        name: "dragMove",
+        pushQueue: true,
+        queueName: "移动元素",
+        init() {
+            this.before = null;
+
+            const start = () => this.before = deepClone(configData.value.blocks);
+
+            const end = (component: any) => state.commands.dragMove(component);
+
+            events.on('dragMoveStart', start);
+            events.on('dragMoveEnd', end);
+
+            return () => {
+                events.off('dragMoveStart', start);
+                events.off('dragMoveEnd', end);
+            }
+        },
+        execute(block: BlockData) {
+            const before = this.before;
+            const after = configData.value.blocks;
+
+            const component = manager.getComponentByType(block.type);
+
+            return {
+                queueName: `${this.queueName}<${component.name}>`,
+                redo() {
+                    configData.value = { ...configData.value, blocks: after };
+                },
+                undo() {
+                    configData.value = { ...configData.value, blocks: before };
+                }
+            }
+        }
+    });
+
+    // 更新全部配置数据
     register({
         name: "updateConfigData",
         pushQueue: true,
+        queueName: "更新整个编辑器",
         execute(newConfigData) {
-            const before = configData.value;
+            const before = deepClone(configData.value);
             const after = newConfigData;
             return {
                 redo: () => {
@@ -158,6 +233,7 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
     register({
         name: "placeTop",
         pushQueue: true,
+        queueName: "置顶",
         execute() {
             const before = deepClone(configData.value.blocks);
 
@@ -186,6 +262,7 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
     register({
         name: "placeBottom",
         pushQueue: true,
+        queueName: "置底",
         execute() {
             const before = deepClone(configData.value.blocks);
 
@@ -220,6 +297,7 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
     register({
         name: "delete",
         pushQueue: true,
+        queueName: "删除元素",
         keycodes: "delete",
         execute() {
             const before = deepClone(configData.value.blocks);
@@ -236,11 +314,12 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         }
     });
 
-    // 更新单个区块数据
+    // 更新单个元素
     register({
         name: "updateBlock",
         pushQueue: true,
-        execute(newBlock: BlockData, oldBlock: BlockData) {
+        queueName: "更新单个元素",
+        execute(newBlock: BlockData, oldBlock: BlockData, queueName?: string) {
             const before = configData.value.blocks;
 
             const after = (() => {
@@ -254,6 +333,7 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
             })();
 
             return {
+                queueName: queueName || this.queueName,
                 redo: () => {
                     configData.value = { ...configData.value, blocks: after }
                 },
@@ -263,7 +343,6 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
             }
         }
     });
-
 
     // 监控键盘快捷键
     (() => {

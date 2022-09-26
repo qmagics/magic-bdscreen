@@ -59,17 +59,17 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
         canvasRef.value.addEventListener('drop', onDrop);
 
         currentComponent.value = component;
-        events.emit('dragStart');
+        events.emit('dragAddStart');
     }
 
     // 触发物料的拖拽结束事件
-    const triggerMenuItemDragend = (e: Event) => {
+    const triggerMenuItemDragend = (e: Event, component: RegisterComponent) => {
         canvasRef.value.removeEventListener('dragenter', onDragenter);
         canvasRef.value.removeEventListener('dragover', onDragover);
         canvasRef.value.removeEventListener('dragleave', onDragleave);
         canvasRef.value.removeEventListener('drop', onDrop);
 
-        events.emit('dragEnd');
+        events.emit('dragAddEnd', component);
     }
 
     return {
