@@ -4,8 +4,9 @@ import { MANAGER_KEY } from '@/packages/tokens';
 import Api from '@/api/index';
 import { provide, reactive, ref } from 'vue';
 import manager from '@/packages/manager';
+import { ConfigData } from '@/types';
 
-const data = ref<any>();
+const data = ref<ConfigData>({ id: '', container: { width: 100, height: 100 }, blocks: [], title: '' });
 const state = reactive({
     loading: false
 });
