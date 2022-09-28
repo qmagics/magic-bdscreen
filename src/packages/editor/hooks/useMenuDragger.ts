@@ -29,7 +29,11 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
     const onDrop = (e: DragEvent) => {
         const blocks = configData.value.blocks;
 
-        const defaultProps = manager.getComponentDefaultProps(currentComponent.value!.type);
+        const component = manager.getComponentByType(currentComponent.value!.type);
+
+        const { defaultProps, defaultSize } = component;
+
+        console.log('defaultSize', defaultSize)
 
         const newConfigData = {
             ...configData.value,
@@ -41,7 +45,8 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
                     zIndex: 1,
                     type: currentComponent.value!.type,
                     alignCenterWhenDrop: true,
-                    props: defaultProps
+                    props: defaultProps,
+                    size: defaultSize || {}
                 }
             ]
         }

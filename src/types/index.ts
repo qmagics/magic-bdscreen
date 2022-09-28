@@ -18,11 +18,11 @@ export interface BlockData {
     /** zIndex值 */
     zIndex: number;
 
-    /** 宽度 */
-    width?: number;
+    // /** 宽度 */
+    // width?: number;
 
-    /** 高度 */
-    height?: number;
+    // /** 高度 */
+    // height?: number;
 
     /** 放下后居中 */
     alignCenterWhenDrop?: boolean;
@@ -32,6 +32,18 @@ export interface BlockData {
 
     /** 组件属性 */
     props: Record<string, any>;
+
+    // /** 是否改变过大小 */
+    // isResized?: boolean;
+
+    /** 组件大小 */
+    size: {
+        /** 宽度 */
+        width?: number;
+
+        /** 高度 */
+        height?: number;
+    }
 }
 
 /** 大屏配置数据 */
@@ -49,9 +61,11 @@ export interface RegisterComponent<Props = any> {
     icon: string;
     category: string;
     preview: (...args: any) => any;
-    render: ({ props }: { props: Props }) => any;
+    render: ({ props, size }: { props: Props, size?: { width?: number, height?: number } }) => any;
     props?: Props | Record<string, any>;
     defaultProps?: Props | Record<string, any>;
+    resize?: { width: boolean, height: boolean };
+    defaultSize?: { width: number, height: number };
 }
 
 export interface ComponentCategory {

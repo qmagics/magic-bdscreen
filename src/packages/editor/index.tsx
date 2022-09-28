@@ -122,7 +122,7 @@ export default defineComponent({
                 <SidebarPanel>
                     {
                         {
-                            header: () => configData.value ? <div style={{ textAlign: "center" }}>{lastSelectedBlock?.value ? '控件属性' : '容器属性'}</div> : null,
+                            header: () => configData.value ? <div style={{ textAlign: "center" }}>{lastSelectedBlock?.value ? '元素属性' : '容器属性'}</div> : null,
                             default: () => configData.value ? <PropsEditor configData={configData} block={lastSelectedBlock}></PropsEditor> : null
                         }
                     }

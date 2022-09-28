@@ -1,6 +1,8 @@
 import { MANAGER_KEY } from "@/packages/tokens";
+import useDesignStore from "@/store/design";
 import { BlockData } from "@/types";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
+import BlockResizer from "../block-resizer";
 
 // 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
@@ -13,8 +15,8 @@ const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undef
             block.alignCenterWhenDrop = false;
         }
 
-        block.width = clientWidth;
-        block.height = clientHeight;
+        block.size.width = clientWidth;
+        block.size.height = clientHeight;
     });
 }
 
@@ -26,7 +28,10 @@ export default defineComponent({
         }
     },
     setup: (props) => {
+        const designStore = useDesignStore();
+
         const manager = inject(MANAGER_KEY)!;
+
         const blockRef = ref<HTMLDivElement>();
 
         const blockStyle = computed<StyleValue>(() => {
@@ -41,13 +46,16 @@ export default defineComponent({
         useAdjustElement(props.block, blockRef);
 
         return () => {
-            const { componentMap } = manager;
-            const { render } = componentMap[props.block.type];
+            const component = manager.getComponentByType(props.block.type);
 
-            const renderedComponent = render({ props: props.block.props || {} });
+            const renderedComponent = component.render({
+                props: props.block.props || {},
+                size: props.block.size
+            });
 
             return <div class="block-item" ref={blockRef} style={blockStyle.value}>
                 {renderedComponent}
+                {(!designStore.isPreView && props.block.isFocused) ? <BlockResizer block={props.block} component={component}></BlockResizer> : null}
             </div>
         }
     }

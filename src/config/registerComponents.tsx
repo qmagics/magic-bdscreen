@@ -1,6 +1,7 @@
 import { Manager } from "@/packages/manager";
 import { createInputProp, createSelectProp, createInputNumberProp } from "@/utils/factory";
 import { ElButton, ElImage, ElInput, ButtonProps } from 'element-plus';
+import { StyleValue } from "vue";
 
 // 统一注册物料组件
 export default (manager: Manager) => {
@@ -12,7 +13,16 @@ export default (manager: Manager) => {
         icon: "text",
         category: "basic",
         preview: () => <span>文本</span>,
-        render: ({ props }) => <span style={{ color: props.color, fontSize: props.fontSize }}>{props.text}</span>,
+        render: ({ props, size }) => {
+            const style: StyleValue = {
+                color: props.color,
+                fontSize: props.fontSize,
+                width: size ? `${size.width}px` : undefined,
+                height: size ? `${size.height}px` : undefined,
+            }
+
+            return <div style={style}>{props.text}</div>
+        },
         props: {
             text: createInputProp('文本内容'),
             color: createInputProp('字体颜色'),
@@ -20,6 +30,10 @@ export default (manager: Manager) => {
         },
         defaultProps: {
             text: "一段文本"
+        },
+        resize: {
+            width: true,
+            height: true
         }
     })
 
@@ -30,7 +44,14 @@ export default (manager: Manager) => {
         icon: "button",
         category: "basic",
         preview: () => <ElButton>按钮</ElButton>,
-        render: ({ props }) => <ElButton size={props.size} type={props.type}>{props.text}</ElButton>,
+        render: ({ props, size }) => {
+            return <ElButton
+                size={props.size} type={props.type}
+                style={size ? {
+                    width: size.width + 'px',
+                    height: size.height + 'px'
+                } : null}> {props.text}</ElButton>
+        },
         props: {
             text: createInputProp('文本'),
             type: createSelectProp('类型', [
@@ -51,6 +72,10 @@ export default (manager: Manager) => {
             text: "按钮",
             size: "default"
 
+        },
+        resize: {
+            width: true,
+            height: true
         }
     })
 
@@ -61,16 +86,27 @@ export default (manager: Manager) => {
         icon: "image",
         category: "basic",
         preview: () => <ElImage></ElImage>,
-        render: ({ props }) => <ElImage style={{ width: props.width + 'px', height: props.height + 'px' }} src={props.src}></ElImage>,
+        render: ({ props, size }) => {
+            const { width, height } = size || {};
+            return <ElImage style={{ width: width && width + 'px', height: height && height + 'px' }} src={props.src}></ElImage>
+        },
         props: {
-            width: createInputNumberProp('宽度'),
-            height: createInputNumberProp('高度'),
+            // width: createInputNumberProp('宽度'),
+            // height: createInputNumberProp('高度'),
             src: createInputProp('资源路径'),
         },
         defaultProps: {
-            width: 100,
-            height: 100,
+            // width: 100,
+            // height: 100,
             src: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.11665.com%2Fimg_p5%2Fi2%2F2201287339141%2FO1CN01yxhAXF2HOd84CRDJz_%21%212201287339141.jpg&refer=http%3A%2F%2Fimg.11665.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652368911&t=0f229c9586d21e9dd8257fdd9ccab0d7"
+        },
+        defaultSize: {
+            width: 100,
+            height: 100
+        },
+        resize: {
+            width: true,
+            height: true
         }
     })
 
@@ -94,6 +130,10 @@ export default (manager: Manager) => {
             placeholder: "请输入内容",
             size: "default"
         },
+        resize: {
+            width: true,
+            height: false
+        }
         // model: {
         //     default: {
 
