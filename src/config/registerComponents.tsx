@@ -117,7 +117,14 @@ export default (manager: Manager) => {
         icon: "input",
         category: "input",
         preview: () => <ElInput></ElInput>,
-        render: () => <ElInput></ElInput>,
+        render: ({ props, size }) => {
+            const style: StyleValue = {
+                width: size.width && size.width + 'px',
+                height: size.height && size.height + 'px',
+            };
+
+            return <ElInput style={style}></ElInput>;
+        },
         props: {
             placeholder: createInputProp('占位文本'),
             size: createSelectProp('尺寸', [

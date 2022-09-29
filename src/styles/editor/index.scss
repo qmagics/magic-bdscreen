@@ -74,15 +74,16 @@
         box-sizing: border-box;
         height: 100%;
         transition: all 0.3s;
+        display: flex;
 
         &__wrapper {
             overflow: auto;
+            width: 100%;
             height: 100%;
-            // border: 1px solid $border-color-1;
-            // border-top: none;
-            // border-bottom: none;
             box-sizing: border-box;
             position: relative;
+            padding: 80px;
+            margin: 0 auto;
         }
     }
 

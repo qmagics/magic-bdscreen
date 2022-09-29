@@ -33,8 +33,6 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
 
         const { defaultProps, defaultSize } = component;
 
-        console.log('defaultSize', defaultSize)
-
         const newConfigData = {
             ...configData.value,
             blocks: [

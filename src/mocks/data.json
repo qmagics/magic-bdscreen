@@ -9,6 +9,7 @@
         "blocks": [
             {
                 "props": {},
+                "size": {},
                 "type": "text",
                 "left": 100,
                 "top": 100,
@@ -16,6 +17,7 @@
             },
             {
                 "props": {},
+                "size": {},
                 "type": "button",
                 "left": 200,
                 "top": 100,
@@ -23,6 +25,7 @@
             },
             {
                 "props": {},
+                "size": {},
                 "type": "input",
                 "left": 200,
                 "top": 200,
@@ -40,6 +43,7 @@
         "blocks": [
             {
                 "props": {},
+                "size": {},
                 "type": "button",
                 "left": 100,
                 "top": 100,
@@ -47,6 +51,7 @@
             },
             {
                 "props": {},
+                "size": {},
                 "type": "button",
                 "left": 200,
                 "top": 100,
@@ -54,6 +59,7 @@
             },
             {
                 "props": {},
+                "size": {},
                 "type": "button",
                 "left": 300,
                 "top": 200,

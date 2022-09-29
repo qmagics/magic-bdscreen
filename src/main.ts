@@ -30,3 +30,4 @@ app.use(createPinia());
 
 // 挂在应用
 app.mount('#app');
+
