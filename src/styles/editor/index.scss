@@ -345,3 +345,10 @@
         cursor: se-resize;
     }
 }
+
+// 画布缩放控件
+.canvas-scaler {
+    position: absolute;
+    bottom: $gutter;
+    right: $gutter;
+}

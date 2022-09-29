@@ -16,6 +16,7 @@ import { useBlockItemContextmenu } from './hooks/useBlockItemContextmenu';
 import { useCommands } from './hooks/useCommands';
 import { COMMANDS_KEY } from '../tokens';
 import ActionHistory from './action-history';
+import CanvasScaler from './canvas-scaler';
 
 export default defineComponent({
     props: {
@@ -52,9 +53,12 @@ export default defineComponent({
 
         // 画布样式
         const canvasStyle = computed<StyleValue>(() => {
+            const width = configData.value?.container.width;
+            const height = configData.value?.container.height;
+
             return {
-                width: `${configData.value?.container.width}px`,
-                height: `${configData.value?.container.height}px`,
+                width: `${width}px`,
+                height: `${height}px`,
             }
         });
 
@@ -84,6 +88,7 @@ export default defineComponent({
                             return <BlockItem
                                 class={{ 'is--focused': block.isFocused }}
                                 block={block}
+                                scale={designStore.editorState.scale}
                                 onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
                                 onContextmenu={(e: MouseEvent) => triggerContextmenu(e, block)}
                             ></BlockItem>
@@ -139,6 +144,7 @@ export default defineComponent({
                     <div class="editor-container__wrapper">
                         {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
                         {/* <ActionHistory commandsState={commandsState}></ActionHistory> */}
+                        <CanvasScaler></CanvasScaler>
                     </div>
                 </div>
 

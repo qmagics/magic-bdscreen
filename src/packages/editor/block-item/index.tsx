@@ -25,6 +25,10 @@ export default defineComponent({
         block: {
             type: Object as PropType<BlockData>,
             required: true
+        },
+        scale: {
+            type: Number,
+            default: 1
         }
     },
     setup: (props) => {
@@ -35,7 +39,11 @@ export default defineComponent({
         const blockRef = ref<HTMLDivElement>();
 
         const blockStyle = computed<StyleValue>(() => {
-            const { left, top, zIndex } = props.block;
+            let { left, top, zIndex } = props.block;
+
+            // left = left * props.scale;
+            // top = top * props.scale;
+
             return {
                 left: `${left}px`,
                 top: `${top}px`,
@@ -48,9 +56,14 @@ export default defineComponent({
         return () => {
             const component = manager.getComponentByType(props.block.type);
 
+            let { width, height } = props.block.size;
+
+            // width = (width || 0) * props.scale;
+            // height = (height || 0) * props.scale;
+
             const renderedComponent = component.render({
                 props: props.block.props || {},
-                size: props.block.size
+                size: { width, height }
             });
 
             return <div class="block-item" ref={blockRef} style={blockStyle.value}>
