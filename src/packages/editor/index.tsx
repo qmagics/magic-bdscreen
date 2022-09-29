@@ -43,7 +43,7 @@ export default defineComponent({
         const editorClass = computed(() => {
             return [
                 'editor',
-                designStore.isPreView ? 'is--preview' : 'is--editing'
+                designStore.editorState.isPreview ? 'is--preview' : 'is--editing'
             ]
         });
 
@@ -137,7 +137,7 @@ export default defineComponent({
 
                 <div class="editor-container">
                     <div class="editor-container__wrapper">
-                        {designStore.isPreView ? previewCanvas : editorCanvas}
+                        {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
                         <ActionHistory commandsState={commandsState}></ActionHistory>
                     </div>
                 </div>

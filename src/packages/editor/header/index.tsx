@@ -23,7 +23,7 @@ export default defineComponent({
     },
 
     setup: (props) => {
-        const designStore = useDesignStore();
+        const { editorState, toggleIsPreview } = useDesignStore();
 
         const commands = inject(COMMANDS_KEY)!;
 
@@ -92,11 +92,11 @@ export default defineComponent({
                 handler: () => commands.delete()
             },
             {
-                label: () => designStore.isPreView ? '设计' : '预览',
-                icon: () => designStore.isPreView ? 'edit' : 'preview',
+                label: () => editorState.isPreview ? '设计' : '预览',
+                icon: () => editorState.isPreview ? 'edit' : 'preview',
                 type: "primary",
                 handler: () => {
-                    designStore.toggleIsPreview();
+                    toggleIsPreview();
                 }
             }
         ];

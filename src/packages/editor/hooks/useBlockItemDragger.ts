@@ -38,14 +38,16 @@ function getLines(configData: WritableComputedRef<ConfigData>, unfocusedBlocks: 
     const containerBlock = {
         left: 0,
         top: 0,
-        width: configData.value.container.width,
-        height: configData.value.container.height
+        size: {
+            width: configData.value.container.width,
+            height: configData.value.container.height
+        }
     }
 
     // 添加区块靠近时可能会产生的所有参考线
-    const { width: BWidth, height: BHeight } = lastSelectedBlock;
+    const { width: BWidth, height: BHeight } = lastSelectedBlock.size;
     [...unfocusedBlocks, containerBlock].forEach(block => {
-        const { left: ALeft, top: ATop, width: AWidth, height: AHeight } = block;
+        const { left: ALeft, top: ATop, size: { width: AWidth, height: AHeight } } = block;
 
         lines.y.push({ showTop: ATop, top: ATop - BHeight! }); // 底对顶
         lines.y.push({ showTop: ATop, top: ATop }); // 顶对顶

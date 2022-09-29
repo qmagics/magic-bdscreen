@@ -55,7 +55,7 @@ export default defineComponent({
 
             return <div class="block-item" ref={blockRef} style={blockStyle.value}>
                 {renderedComponent}
-                {(!designStore.isPreView && props.block.isFocused) ? <BlockResizer block={props.block} component={component}></BlockResizer> : null}
+                {(!designStore.editorState.isPreview && props.block.isFocused) ? <BlockResizer block={props.block} component={component}></BlockResizer> : null}
             </div>
         }
     }

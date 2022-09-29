@@ -291,6 +291,7 @@
 // 区块大小编辑控件
 .block-resizer {
     $size: 6px;
+
     position: absolute;
     width: $size;
     height: $size;
@@ -300,46 +301,46 @@
 
     &.is--t {
         left: 50%;
-        top: -#{$size/2};
+        top: -#{math.div($size, 2)};
         transform: translateX(-50%);
         cursor: ns-resize;
     }
     &.is--b {
         left: 50%;
-        bottom: -#{$size/2};
+        bottom: -#{math.div($size, 2)};
         transform: translateX(-50%);
         cursor: ns-resize;
     }
     &.is--l {
         top: 50%;
-        left: -#{$size/2};
+        left: -#{math.div($size, 2)};
         transform: translateY(-50%);
         cursor: ew-resize;
     }
     &.is--r {
         top: 50%;
-        right: -#{$size/2};
+        right: -#{math.div($size, 2)};
         transform: translateY(-50%);
         cursor: ew-resize;
     }
     &.is--tl {
-        top: -#{$size/2};
-        left: -#{$size/2};
+        top: -#{math.div($size, 2)};
+        left: -#{math.div($size, 2)};
         cursor: se-resize;
     }
     &.is--tr {
-        top: -#{$size/2};
-        right: -#{$size/2};
+        top: -#{math.div($size, 2)};
+        right: -#{math.div($size, 2)};
         cursor: sw-resize;
     }
     &.is--bl {
-        bottom: -#{$size/2};
-        left: -#{$size/2};
+        bottom: -#{math.div($size, 2)};
+        left: -#{math.div($size, 2)};
         cursor: sw-resize;
     }
     &.is--br {
-        bottom: -#{$size/2};
-        right: -#{$size/2};
+        bottom: -#{math.div($size, 2)};
+        right: -#{math.div($size, 2)};
         cursor: se-resize;
     }
 }
