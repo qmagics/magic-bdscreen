@@ -1,5 +1,6 @@
 import { BlockData, RegisterComponent } from "@/types";
 import { defineComponent, PropType } from "vue";
+import { afterScale, beforeScale } from "../utils";
 
 interface MoveDirection {
     verticle: "start" | "end" | "center";
@@ -38,10 +39,10 @@ export default defineComponent({
             state = {
                 startX: clientX,
                 startY: clientY,
-                startLeft: left,
-                startTop: top,
-                startWidth: width!,
-                startHeight: height!,
+                startLeft: afterScale(left),
+                startTop: afterScale(top),
+                startWidth: afterScale(width!),
+                startHeight: afterScale(height!),
                 direction
             }
 
@@ -64,17 +65,17 @@ export default defineComponent({
             if (verticle === 'center') durY = 0;
 
             if (horizontal === 'start') {
-                props.block.left = startLeft + durX;
+                props.block.left = beforeScale(startLeft + durX);
                 durX = -durX;
             }
 
             if (verticle === 'start') {
-                props.block.top = startTop + durY;
+                props.block.top = beforeScale(startTop + durY);
                 durY = -durY;
             }
 
-            props.block.size.width = startWidth + durX;
-            props.block.size.height = startHeight + durY;
+            props.block.size.width = beforeScale(startWidth + durX);
+            props.block.size.height = beforeScale(startHeight + durY);
         }
 
         const onMouseup = (e: MouseEvent) => {

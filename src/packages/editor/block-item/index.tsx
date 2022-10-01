@@ -3,6 +3,7 @@ import useDesignStore from "@/store/design";
 import { BlockData } from "@/types";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
 import BlockResizer from "../block-resizer";
+import { afterScale, beforeScale } from "../utils";
 
 // 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
@@ -15,8 +16,8 @@ const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undef
             block.alignCenterWhenDrop = false;
         }
 
-        block.size.width = clientWidth;
-        block.size.height = clientHeight;
+        block.size.width = beforeScale(clientWidth);
+        block.size.height = beforeScale(clientHeight);
     });
 }
 
@@ -41,8 +42,8 @@ export default defineComponent({
         const blockStyle = computed<StyleValue>(() => {
             let { left, top, zIndex } = props.block;
 
-            // left = left * props.scale;
-            // top = top * props.scale;
+            left = afterScale(left);
+            top = afterScale(top);
 
             return {
                 left: `${left}px`,
@@ -58,8 +59,8 @@ export default defineComponent({
 
             let { width, height } = props.block.size;
 
-            // width = (width || 0) * props.scale;
-            // height = (height || 0) * props.scale;
+            width = afterScale(width);
+            height = afterScale(height);
 
             const renderedComponent = component.render({
                 props: props.block.props || {},

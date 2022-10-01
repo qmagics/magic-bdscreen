@@ -2,6 +2,7 @@ import { BlockData, ConfigData } from "@/types";
 import { ComputedRef, reactive, WritableComputedRef } from "vue";
 import events from "../events";
 import { MarkLineData } from "../markline";
+import { afterScale, beforeScale } from "../utils";
 import { FocusData } from "./useFocus";
 
 interface UseBlockItemDraggerArgs {
@@ -45,9 +46,17 @@ function getLines(configData: WritableComputedRef<ConfigData>, unfocusedBlocks: 
     }
 
     // 添加区块靠近时可能会产生的所有参考线
-    const { width: BWidth, height: BHeight } = lastSelectedBlock.size;
+    let { width: BWidth, height: BHeight } = lastSelectedBlock.size;
+    BWidth = afterScale(BWidth);
+    BHeight = afterScale(BHeight);
+
     [...unfocusedBlocks, containerBlock].forEach(block => {
-        const { left: ALeft, top: ATop, size: { width: AWidth, height: AHeight } } = block;
+        let { left: ALeft, top: ATop, size: { width: AWidth, height: AHeight } } = block;
+
+        ALeft = afterScale(ALeft);
+        ATop = afterScale(ATop);
+        AWidth = afterScale(AWidth);
+        AHeight = afterScale(AHeight);
 
         lines.y.push({ showTop: ATop, top: ATop - BHeight! }); // 底对顶
         lines.y.push({ showTop: ATop, top: ATop }); // 顶对顶
@@ -88,9 +97,9 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
     const triggerMousedown = (e: MouseEvent) => {
         dragState.startX = e.clientX;
         dragState.startY = e.clientY;
-        dragState.startLeft = lastSelectedBlock.value.left;
-        dragState.startTop = lastSelectedBlock.value.top;
-        dragState.startPosList = focusData.value.focused.map(({ left, top }) => ({ left, top }));
+        dragState.startLeft = afterScale(lastSelectedBlock.value.left);
+        dragState.startTop = afterScale(lastSelectedBlock.value.top);
+        dragState.startPosList = focusData.value.focused.map(({ left, top }) => ({ left: afterScale(left), top: afterScale(top) }));
         dragState.lines = getLines(configData, focusData.value.unfocused, lastSelectedBlock.value);
 
         document.addEventListener('mousemove', onMousemove);
@@ -148,8 +157,8 @@ export const useBlockItemDragger = ({ configData, focusData, lastSelectedBlock }
         // 给所有拖拽的区块设置最新位置
         focusData.value.focused.forEach((block, index) => {
             const { left, top } = dragState.startPosList[index];
-            block.left = left + durX;
-            block.top = top + durY;
+            block.left = beforeScale(left + durX);
+            block.top = beforeScale(top + durY);
         })
     }
 

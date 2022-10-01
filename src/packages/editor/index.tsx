@@ -17,6 +17,7 @@ import { useCommands } from './hooks/useCommands';
 import { COMMANDS_KEY } from '../tokens';
 import ActionHistory from './action-history';
 import CanvasScaler from './canvas-scaler';
+import { afterScale } from './utils';
 
 export default defineComponent({
     props: {
@@ -53,8 +54,11 @@ export default defineComponent({
 
         // 画布样式
         const canvasStyle = computed<StyleValue>(() => {
-            const width = configData.value?.container.width;
-            const height = configData.value?.container.height;
+            let width = configData.value?.container.width;
+            let height = configData.value?.container.height;
+
+            width = afterScale(width);
+            height = afterScale(height);
 
             return {
                 width: `${width}px`,

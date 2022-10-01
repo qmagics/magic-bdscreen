@@ -2,6 +2,7 @@ import { MANAGER_KEY } from "@/packages/tokens";
 import { ConfigData, RegisterComponent } from "@/types";
 import { inject, ref, Ref, WritableComputedRef } from "vue";
 import events from "../events";
+import { beforeScale } from "../utils";
 
 interface UseMenuDraggerArgs {
     canvasRef: Ref<HTMLDivElement>;
@@ -38,8 +39,8 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
             blocks: [
                 ...blocks,
                 {
-                    top: e.offsetY,
-                    left: e.offsetX,
+                    top: beforeScale(e.offsetY),
+                    left: beforeScale(e.offsetX),
                     zIndex: 1,
                     type: currentComponent.value!.type,
                     alignCenterWhenDrop: true,

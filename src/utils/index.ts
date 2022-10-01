@@ -1,15 +1,16 @@
-// 延迟
+
+/** 延迟 */
 export const sleep = (wait: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, wait);
     });
 }
 
-// 深拷贝
+/** 深拷贝 */
 export const deepClone = (obj: any, hashMap = new WeakMap) => {
     // 排除null和undefined
     if (obj == null || typeof obj !== 'object') return obj;
-    
+
     // 排除非真正意义的对象
     if (obj instanceof Date) return new Date(obj);
     if (obj instanceof RegExp) return new RegExp(obj);
@@ -32,3 +33,9 @@ export const deepClone = (obj: any, hashMap = new WeakMap) => {
 
     return cloneObj;
 }
+
+/** 生成一个类型判断函数 */
+const isType = (type: string) => (x: any) => Object.prototype.toString.call(x).slice(8, -1) === type;
+
+/** 是否是数字 */
+export const isNumber = isType('Number');

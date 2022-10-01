@@ -60,7 +60,7 @@ export interface RegisterComponent<Props = any> {
     type: string;
     icon: string;
     category: string;
-    preview: (...args: any) => any;
+    preview?: (...args: any) => any;
     render: ({ props, size }: { props: Props, size: { width?: number, height?: number } }) => any;
     props?: Props | Record<string, any>;
     defaultProps?: Props | Record<string, any>;

@@ -1,6 +1,7 @@
+import { MbImage } from "@/components/mb-image";
 import { Manager } from "@/packages/manager";
 import { createInputProp, createSelectProp, createInputNumberProp } from "@/utils/factory";
-import { ElButton, ElImage, ElInput, ButtonProps } from 'element-plus';
+import { ElButton, ElInput, ButtonProps } from 'element-plus';
 import { StyleValue } from "vue";
 
 // 统一注册物料组件
@@ -80,24 +81,18 @@ export default (manager: Manager) => {
     })
 
     // 图片
-    manager.registerComponent<{ width: number, height: number, src: string }>({
+    manager.registerComponent<{ src: string }>({
         name: "图片",
         type: "image",
         icon: "image",
         category: "basic",
-        preview: () => <ElImage></ElImage>,
         render: ({ props, size }) => {
-            const { width, height } = size || {};
-            return <ElImage style={{ width: width && width + 'px', height: height && height + 'px' }} src={props.src}></ElImage>
+            return <MbImage src={props.src} size={size}></MbImage>
         },
         props: {
-            // width: createInputNumberProp('宽度'),
-            // height: createInputNumberProp('高度'),
-            src: createInputProp('资源路径'),
+            src: createInputProp('图片地址'),
         },
         defaultProps: {
-            // width: 100,
-            // height: 100,
             src: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.11665.com%2Fimg_p5%2Fi2%2F2201287339141%2FO1CN01yxhAXF2HOd84CRDJz_%21%212201287339141.jpg&refer=http%3A%2F%2Fimg.11665.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652368911&t=0f229c9586d21e9dd8257fdd9ccab0d7"
         },
         defaultSize: {
