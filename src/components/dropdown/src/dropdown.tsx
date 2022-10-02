@@ -1,7 +1,8 @@
+import { isFunction } from "@/utils";
 import { computed, defineComponent, InjectionKey, onBeforeUnmount, onMounted, PropType, provide, reactive, ref, VNode } from "vue";
 
 export interface DropdownOptions {
-    el: HTMLElement,
+    el: HTMLElement;
     render: () => VNode;
 }
 
@@ -13,6 +14,7 @@ export default defineComponent({
             required: true,
             type: Object as PropType<DropdownOptions>
         },
+        onClosed: Function
     },
     setup(props, { expose, slots }) {
         const state = reactive({
@@ -33,6 +35,10 @@ export default defineComponent({
 
         const hide = () => {
             state.isShow = false;
+
+            if (isFunction(props.onClosed)) {
+                props.onClosed!();
+            }
         }
 
         expose({ show });
@@ -59,7 +65,7 @@ export default defineComponent({
 
         const onDocumentMousedown = (e: MouseEvent) => {
             if (!dropdownRef.value!.contains(e.target as HTMLElement)) {
-                state.isShow = false;
+                hide();
             }
         }
 

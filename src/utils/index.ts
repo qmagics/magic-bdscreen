@@ -39,3 +39,6 @@ const isType = (type: string) => (x: any) => Object.prototype.toString.call(x).s
 
 /** 是否是数字 */
 export const isNumber = isType('Number');
+
+/** 是否是函数 */
+export const isFunction = isType('Function');

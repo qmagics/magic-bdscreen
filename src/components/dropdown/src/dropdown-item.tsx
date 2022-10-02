@@ -17,8 +17,8 @@ export default defineComponent({
         const { hide } = inject(DROPDOWN_KEY)!;
 
         const onItemClick = (e: MouseEvent) => {
-            hide();
             emit('click', e);
+            hide();
         }
 
         return () => {

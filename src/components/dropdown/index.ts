@@ -10,7 +10,11 @@ export const Dropdown = (options: DropdownOptions): DropdownReturn => {
     const el = document.createElement('div');
 
     const vnode = createVNode(DropdownComponent, {
-        options
+        options,
+        onClosed() {
+            render(null, el);
+            document.body.removeChild(el);
+        }
     });
 
     render(vnode, el);
