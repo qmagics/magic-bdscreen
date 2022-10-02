@@ -1,6 +1,6 @@
 import { MbImage } from "@/components/mb-image";
 import { Manager } from "@/packages/manager";
-import { createInputProp, createSelectProp, createInputNumberProp } from "@/utils/factory";
+import { createInputProp, createSelectProp, createInputNumberProp, createColorProp } from "@/utils/factory";
 import { ElButton, ElInput, ButtonProps } from 'element-plus';
 import { StyleValue } from "vue";
 
@@ -17,7 +17,7 @@ export default (manager: Manager) => {
         render: ({ props, size }) => {
             const style: StyleValue = {
                 color: props.color,
-                fontSize: props.fontSize,
+                fontSize: `${props.fontSize}px`,
                 width: size ? `${size.width}px` : undefined,
                 height: size ? `${size.height}px` : undefined,
             }
@@ -26,8 +26,17 @@ export default (manager: Manager) => {
         },
         props: {
             text: createInputProp('文本内容'),
-            color: createInputProp('字体颜色'),
-            fontSize: createInputProp('字体大小')
+            color: createColorProp('字体颜色'),
+            fontSize: createSelectProp('字体大小', [
+                { label: "12px", value: 12 },
+                { label: "14px", value: 14 },
+                { label: "16px", value: 16 },
+                { label: "18px", value: 18 },
+                { label: "20px", value: 20 },
+                { label: "24px", value: 24 },
+                { label: "28px", value: 28 },
+                { label: "32px", value: 32 },
+            ])
         },
         defaultProps: {
             text: "一段文本"

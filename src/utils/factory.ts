@@ -19,7 +19,7 @@ export const createColorProp = (label: string) => {
     }
 }
 
-export const createSelectProp = (label: string, options: { label: string, value: string }[]) => {
+export const createSelectProp = (label: string, options: { label: string, value: any }[]) => {
     return {
         type: 'select',
         label,

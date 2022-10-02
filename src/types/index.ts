@@ -1,3 +1,5 @@
+import { VNode } from "vue";
+
 /** 容器配置数据 */
 export interface ContainerData {
     width: number;
@@ -62,7 +64,7 @@ export interface RegisterComponent<Props = any> {
     category: string;
     preview?: (...args: any) => any;
     render: ({ props, size }: { props: Props, size: { width?: number, height?: number } }) => any;
-    props?: Props | Record<string, any>;
+    props?: Props | Record<string, any> | ((props: Props) => VNode);
     defaultProps?: Props | Record<string, any>;
     resize?: { width: boolean, height: boolean };
     defaultSize?: { width: number, height: number };

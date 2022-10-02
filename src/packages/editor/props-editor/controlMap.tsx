@@ -1,5 +1,5 @@
 import { BlockData } from "@/types";
-import { ElInput, ElInputNumber, ElOption, ElSelect } from "element-plus";
+import { ElColorPicker, ElInput, ElInputNumber, ElOption, ElSelect } from "element-plus";
 import { VNode } from "vue";
 
 export default {
@@ -13,5 +13,8 @@ export default {
         return <ElSelect v-model={props[propName]}>
             {propConfig.options.map((opt: any) => <ElOption {...opt}></ElOption>)}
         </ElSelect>
-    }
+    },
+    color: (props, propName) => {
+        return <ElColorPicker v-model={props[propName]}></ElColorPicker>
+    },
 } as Record<string, (props: BlockData['props'], propName: any, propConfig: any) => VNode>
