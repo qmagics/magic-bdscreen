@@ -1,6 +1,6 @@
 import { MANAGER_KEY, COMMANDS_KEY } from "@/packages/tokens";
 import { BlockData } from "@/types";
-import { deepClone } from "@/utils";
+import { deepClone, isArray } from "@/utils";
 import { ElForm, ElFormItem, ElInputNumber } from "element-plus";
 import { ComputedRef, defineComponent, inject, PropType, reactive } from "vue";
 import controlMap from "./controlMap";
@@ -41,21 +41,56 @@ export default defineComponent({
                     <ElFormItem label="高度">
                         <ElInputNumber v-model={blockData.size.height}></ElInputNumber>
                     </ElFormItem>
+                    <ElFormItem label="X">
+                        <ElInputNumber v-model={blockData.left}></ElInputNumber>
+                    </ElFormItem>
+                    <ElFormItem label="Y">
+                        <ElInputNumber v-model={blockData.top}></ElInputNumber>
+                    </ElFormItem>
                 </>
             );
 
             // 元素对应的组件特有的属性表单项
             const componentFormItems = (
-                Object.entries(componentProps).map(([propName, propConfig]) => {
-                    const { type, label } = propConfig as any;
-                    return <ElFormItem label={label} prop={propName}>
-                        {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
-                    </ElFormItem>
-                })
-            )
+                () => {
+                    let arr: any = [];
+
+                    if (isArray(componentProps)) {
+                        arr = componentProps.map(group => {
+                            const { label, props } = group;
+
+                            return (
+                                <div class="block-editor-group">
+                                    <div class="block-editor-group__title">{label}</div>
+                                    <div class="block-editor-group__content">
+                                        {
+                                            Object.entries(props).map(([propName, propConfig]) => {
+                                                const { type, label } = propConfig as any;
+                                                return <ElFormItem label={label} prop={propName}>
+                                                    {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
+                                                </ElFormItem>
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                    else {
+                        arr = Object.entries(componentProps).map(([propName, propConfig]) => {
+                            const { type, label } = propConfig as any;
+                            return <ElFormItem label={label} prop={propName}>
+                                {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
+                            </ElFormItem>
+                        });
+                    }
+
+                    return arr;
+                }
+            )()
 
             return (
-                <ElForm labelWidth="100px" labelPosition="top">
+                <ElForm class="block-editor" labelWidth="100px" labelPosition="top">
                     {commonFormItems}
                     {componentFormItems}
                 </ElForm>

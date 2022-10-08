@@ -1,5 +1,6 @@
 import { BlockData, RegisterComponent } from "@/types";
 import { defineComponent, PropType } from "vue";
+import events from "../events";
 import { afterScale, beforeScale } from "../utils";
 
 interface MoveDirection {
@@ -46,10 +47,10 @@ export default defineComponent({
                 direction
             }
 
-            // props.block.isResized = true;
-
             document.addEventListener('mousemove', onMousemove);
             document.addEventListener('mouseup', onMouseup);
+
+            events.emit('dragResizeStart');
         }
 
         const onMousemove = (e: MouseEvent) => {
@@ -81,6 +82,8 @@ export default defineComponent({
         const onMouseup = (e: MouseEvent) => {
             document.removeEventListener('mousemove', onMousemove);
             document.removeEventListener('mouseup', onMouseup);
+
+            events.emit('dragResizeEnd', props.block);
         }
 
         return () => {

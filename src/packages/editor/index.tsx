@@ -148,7 +148,7 @@ export default defineComponent({
                     <div class="editor-container__wrapper">
                         {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
                         <ActionHistory commandsState={commandsState}></ActionHistory>
-                        <CanvasScaler></CanvasScaler>
+                        {/* <CanvasScaler></CanvasScaler> */}
                     </div>
                 </div>
 

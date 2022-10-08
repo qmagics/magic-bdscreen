@@ -1,3 +1,11 @@
+export const createPropGroup = (label: string, props: any) => {
+    return {
+        type: "group",
+        label,
+        props
+    }
+}
+
 export const createInputProp = (label: string) => {
     return {
         type: 'input',

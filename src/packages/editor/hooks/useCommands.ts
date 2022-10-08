@@ -210,6 +210,44 @@ export const useCommands = (configData: WritableComputedRef<ConfigData>, focusDa
         }
     });
 
+    // 拖拽缩放（对画布中区块的拖拽缩放）
+    register({
+        name: "dragResize",
+        pushQueue: true,
+        queueName: "缩放元素",
+        init() {
+            this.before = null;
+
+            const start = () => this.before = deepClone(configData.value.blocks);
+
+            const end = (component: any) => state.commands.dragResize(component);
+
+            events.on('dragResizeStart', start);
+            events.on('dragResizeEnd', end);
+
+            return () => {
+                events.off('dragResizeStart', start);
+                events.off('dragResizeEnd', end);
+            }
+        },
+        execute(block: BlockData) {
+            const before = this.before;
+            const after = configData.value.blocks;
+
+            const component = manager.getComponentByType(block.type);
+
+            return {
+                queueName: `${this.queueName}<${component.name}>`,
+                redo() {
+                    configData.value = { ...configData.value, blocks: after };
+                },
+                undo() {
+                    configData.value = { ...configData.value, blocks: before };
+                }
+            }
+        }
+    });
+
     // 更新全部配置数据
     register({
         name: "updateConfigData",

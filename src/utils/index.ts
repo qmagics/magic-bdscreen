@@ -42,3 +42,6 @@ export const isNumber = isType('Number');
 
 /** 是否是函数 */
 export const isFunction = isType('Function');
+
+/** 是否是数组 */
+export const isArray = Array.isArray;
