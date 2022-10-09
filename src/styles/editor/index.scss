@@ -260,7 +260,6 @@
         padding: $gutter;
     }
     .block-editor {
-        
     }
 }
 
@@ -356,4 +355,46 @@
     position: absolute;
     bottom: $gutter;
     right: $gutter;
+}
+
+// 画布标尺
+.sketch-ruler {
+    position: absolute;
+    width: 100%; /* scrollbar width */
+    height: 100%;
+    z-index: 3; /* 需要比resizer高 */
+    pointer-events: none;
+    font-size: 12px;
+    overflow: hidden;
+    span {
+        line-height: 1;
+    }
+
+    .canvas-ruler {
+        width: 100%;
+        height: 100%;
+        pointer-events: auto;
+    }
+
+    .corner {
+        position: absolute;
+        left: 0;
+        top: 0;
+        pointer-events: auto;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        box-sizing: content-box;
+        &.active {
+            // background-color: ${props => props.cornerActiveColor} !important;
+        }
+    }
+
+    .indicator {
+        position: absolute;
+        pointer-events: none;
+        .value {
+            position: absolute;
+            background: white;
+        }
+    }
 }

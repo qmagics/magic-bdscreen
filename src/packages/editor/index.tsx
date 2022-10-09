@@ -18,6 +18,8 @@ import { COMMANDS_KEY } from '../tokens';
 import ActionHistory from './action-history';
 import CanvasScaler from './canvas-scaler';
 import { afterScale } from './utils';
+import SketchRuler from './sketch-ruler';
+import { useSketchRuler } from './hooks/useSketchRuler';
 
 export default defineComponent({
     props: {
@@ -34,6 +36,12 @@ export default defineComponent({
     setup: (props, { emit }) => {
 
         const designStore = useDesignStore();
+
+        // 容器元素
+        const screenRef = ref();
+
+        // 滚动容器元素
+        const scrollContainerRef = ref();
 
         // 配置数据代理对象
         const configData = computed({
@@ -85,6 +93,9 @@ export default defineComponent({
 
         // 区块右键菜单管理
         const { triggerContextmenu } = useBlockItemContextmenu(commandsState.commands);
+
+        // 画布比例尺
+        const { sketchRulerProps } = useSketchRuler(configData, screenRef, scrollContainerRef);
 
         return () => {
 
@@ -149,12 +160,14 @@ export default defineComponent({
 
                 <div class="editor-left-sidebar">{leftSidebar}</div>
 
-                <div class="editor-container">
-                    <div class="editor-container__wrapper">
+                <div class="editor-container" ref={screenRef}>
+                    <div class="editor-container__wrapper" ref={scrollContainerRef}>
                         {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
-                        <ActionHistory commandsState={commandsState}></ActionHistory>
+                        {/* <ActionHistory commandsState={commandsState}></ActionHistory> */}
                         {/* <CanvasScaler></CanvasScaler> */}
                     </div>
+
+                    <SketchRuler {...sketchRulerProps}></SketchRuler>
                 </div>
 
                 <div class="editor-right-sidebar">{rightSidebar}</div>

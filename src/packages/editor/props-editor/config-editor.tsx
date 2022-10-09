@@ -23,14 +23,16 @@ export default defineComponent({
                 commands.updateConfigData({ ...props.configData.value, container: newContainerData });
             });
 
-            return <ElForm model={containerData} labelWidth="100px" labelPosition="top">
-                <ElFormItem label="页面宽度" prop="width">
-                    <ElInputNumber v-model={containerData.width} />
-                </ElFormItem>
-                <ElFormItem label="页面高度" prop="height">
-                    <ElInputNumber v-model={containerData.height} />
-                </ElFormItem>
-            </ElForm>
+            return <div class="config-editor">
+                <ElForm model={containerData} labelWidth="100px" labelPosition="top">
+                    <ElFormItem label="页面宽度" prop="width">
+                        <ElInputNumber v-model={containerData.width} />
+                    </ElFormItem>
+                    <ElFormItem label="页面高度" prop="height">
+                        <ElInputNumber v-model={containerData.height} />
+                    </ElFormItem>
+                </ElForm>
+            </div>
         }
     }
 });

@@ -2,6 +2,7 @@ import { isFunction } from "@/utils";
 import { computed, defineComponent, InjectionKey, onBeforeUnmount, onMounted, PropType, provide, reactive, ref, VNode } from "vue";
 
 export interface DropdownOptions {
+    event: MouseEvent;
     el: HTMLElement;
     render: () => VNode;
 }
@@ -27,9 +28,13 @@ export default defineComponent({
         const show = (options: DropdownOptions) => {
             state.options = options;
 
-            const { left, top, width, height } = options.el.getBoundingClientRect();
-            state.left = left;
-            state.top = top + height;
+            // const { left, top, width, height } = options.el.getBoundingClientRect();
+
+            // state.left = left;
+            // state.top = top + height;
+            state.left = options.event.pageX;
+            state.top = options.event.pageY;
+
             state.isShow = true;
         }
 

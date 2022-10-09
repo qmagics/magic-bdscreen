@@ -65,6 +65,7 @@ export const useBlockItemContextmenu = (commands: UseCommandsState['commands']) 
         const el = e.target as HTMLElement;
 
         Dropdown({
+            event: e,
             el,
             render() {
                 return (<>
