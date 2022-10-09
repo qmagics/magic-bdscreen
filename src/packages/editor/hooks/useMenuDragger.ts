@@ -34,19 +34,23 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
 
         const { defaultProps, defaultSize } = component;
 
+        // 新拖入的元素
+        const newBlock = {
+            top: beforeScale(e.offsetY),
+            left: beforeScale(e.offsetX),
+            zIndex: 1,
+            type: currentComponent.value!.type,
+            alignCenterWhenDrop: true,
+            props: defaultProps,
+            size: defaultSize || {},
+            model: {}
+        }
+
         const newConfigData = {
             ...configData.value,
             blocks: [
                 ...blocks,
-                {
-                    top: beforeScale(e.offsetY),
-                    left: beforeScale(e.offsetX),
-                    zIndex: 1,
-                    type: currentComponent.value!.type,
-                    alignCenterWhenDrop: true,
-                    props: defaultProps,
-                    size: defaultSize || {}
-                }
+                newBlock
             ]
         }
 

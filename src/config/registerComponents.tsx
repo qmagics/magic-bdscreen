@@ -1,7 +1,7 @@
 import { MbImage } from "@/components/mb-image";
 import { Manager } from "@/packages/manager";
-import { createInputProp, createSelectProp, createPropGroup, createColorProp } from "@/utils/factory";
-import { ElButton, ElInput, ButtonProps } from 'element-plus';
+import { createInputProp, createSelectProp, createPropGroup, createColorProp, createFontsizeSelect } from "@/utils/factory";
+import { ElButton, ElInput, ButtonProps, ElInputNumber } from 'element-plus';
 import { StyleValue } from "vue";
 
 // 统一注册物料组件
@@ -29,35 +29,12 @@ export default (manager: Manager) => {
             createPropGroup('基础属性', {
                 text: createInputProp('文本内容'),
             }),
-            createPropGroup('', {
+            createPropGroup('文字属性', {
                 color: createColorProp('文本颜色'),
                 backgroundColor: createColorProp('背景颜色'),
-                fontSize: createSelectProp('字体大小', [
-                    { label: "12px", value: 12 },
-                    { label: "14px", value: 14 },
-                    { label: "16px", value: 16 },
-                    { label: "18px", value: 18 },
-                    { label: "20px", value: 20 },
-                    { label: "24px", value: 24 },
-                    { label: "28px", value: 28 },
-                    { label: "32px", value: 32 },
-                ])
+                fontSize: createFontsizeSelect('字体大小')
             }),
         ],
-        // props: {
-        //     text: createInputProp('文本内容'),
-        //     color: createColorProp('字体颜色'),
-        //     fontSize: createSelectProp('字体大小', [
-        //         { label: "12px", value: 12 },
-        //         { label: "14px", value: 14 },
-        //         { label: "16px", value: 16 },
-        //         { label: "18px", value: 18 },
-        //         { label: "20px", value: 20 },
-        //         { label: "24px", value: 24 },
-        //         { label: "28px", value: 28 },
-        //         { label: "32px", value: 32 },
-        //     ])
-        // },
         defaultProps: {
             text: "一段文本"
         },
@@ -101,7 +78,6 @@ export default (manager: Manager) => {
         defaultProps: {
             text: "按钮",
             size: "default"
-
         },
         resize: {
             width: true,
@@ -135,28 +111,38 @@ export default (manager: Manager) => {
     })
 
     // 输入框
-    manager.registerComponent({
+    manager.registerComponent<{ size: string, placeholder: string }>({
         name: "输入框",
         type: "input",
         icon: "input",
         category: "input",
         preview: () => <ElInput></ElInput>,
-        render: ({ props, size }) => {
+        render: ({ props, size, model }) => {
             const style: StyleValue = {
                 width: size.width && size.width + 'px',
                 height: size.height && size.height + 'px',
             };
 
-            return <ElInput style={style}></ElInput>;
+            return <ElInput
+                placeholder={props.placeholder}
+                size={props.size}
+                style={style}
+                {...model.default}></ElInput>;
         },
-        props: {
-            placeholder: createInputProp('占位文本'),
-            size: createSelectProp('尺寸', [
-                { label: "小", value: "small" },
-                { label: "默认", value: "default" },
-                { label: "大", value: "large" },
-            ]),
-        },
+        // editor: ({ props, block }) => {
+        //     return <div>
+        //         <ElInput v-model={props.placeholder}></ElInput>
+        //         <ElInputNumber v-model={block.value.size.width}></ElInputNumber>
+        //     </div>
+        // },
+        // props: {
+        //     placeholder: createInputProp('占位文本'),
+        //     size: createSelectProp('尺寸', [
+        //         { label: "小", value: "small" },
+        //         { label: "默认", value: "default" },
+        //         { label: "大", value: "large" },
+        //     ]),
+        // },
         defaultProps: {
             placeholder: "请输入内容",
             size: "default"
@@ -164,11 +150,9 @@ export default (manager: Manager) => {
         resize: {
             width: true,
             height: false
+        },
+        model: {
+            default: "绑定字段"
         }
-        // model: {
-        //     default: {
-
-        //     }
-        // }
     })
 }

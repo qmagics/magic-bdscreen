@@ -1,6 +1,6 @@
 import { MANAGER_KEY } from "@/packages/tokens";
 import useDesignStore from "@/store/design";
-import { BlockData } from "@/types";
+import { BlockData, FormModel } from "@/types";
 import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
 import BlockResizer from "../block-resizer";
 import { afterScale, beforeScale } from "../utils";
@@ -25,6 +25,10 @@ export default defineComponent({
     props: {
         block: {
             type: Object as PropType<BlockData>,
+            required: true
+        },
+        formData: {
+            type: Object as PropType<FormModel>,
             required: true
         },
         scale: {
@@ -64,7 +68,17 @@ export default defineComponent({
 
             const renderedComponent = component.render({
                 props: props.block.props || {},
-                size: { width, height }
+                size: { width, height },
+                model: Object.keys(component.model || {}).reduce((pre: any, modelName: string) => {
+                    let propName = props.block.model[modelName];
+
+                    pre[modelName] = {
+                        modelValue: props.formData[propName],
+                        'onUpdate:modelValue': (v: any) => props.formData[propName] = v
+                    }
+
+                    return pre;
+                }, {})
             });
 
             return <div class="block-item" ref={blockRef} style={blockStyle.value}>

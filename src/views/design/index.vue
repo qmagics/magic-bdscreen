@@ -6,13 +6,14 @@ import { provide, reactive, ref } from 'vue';
 import manager from '@/packages/manager';
 import { ConfigData } from '@/types';
 
-const configData = ref<ConfigData>({ id: '', container: { width: 100, height: 100 }, blocks: [], title: '' });
-const state = reactive({
-    loading: false
-});
+provide(MANAGER_KEY, manager);
 
 const props = defineProps({
     id: String
+});
+
+const state = reactive({
+    loading: false
 });
 
 const loadData = async () => {
@@ -24,11 +25,16 @@ const loadData = async () => {
     }
 }
 
-provide(MANAGER_KEY, manager);
+const configData = ref<ConfigData>({ id: '', container: { width: 100, height: 100 }, blocks: [], title: '' });
+
+const formData = reactive({
+    name: "",
+    age: 22
+});
 
 loadData();
 </script>
 
 <template>
-    <editor v-model="configData" v-loading="state.loading"></editor>
+    <editor v-model="configData" v-loading="state.loading" :formData="formData"></editor>
 </template>

@@ -1,7 +1,7 @@
 import { MANAGER_KEY, COMMANDS_KEY } from "@/packages/tokens";
 import { BlockData } from "@/types";
 import { deepClone, isArray } from "@/utils";
-import { ElForm, ElFormItem, ElInputNumber } from "element-plus";
+import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput, ElInputNumber, ElTabPane, ElTabs } from "element-plus";
 import { ComputedRef, defineComponent, inject, PropType, reactive } from "vue";
 import controlMap from "./controlMap";
 import { watchDebounced } from '@vueuse/core';
@@ -32,7 +32,7 @@ export default defineComponent({
                 commands.updateBlock(newBlock, block.value, `${component.name}<更新属性>`);
             }, { debounce: 0 });
 
-            // 元素通用属性
+            // 元素通用属性表单项
             const commonFormItems = (
                 <>
                     <ElFormItem label="宽度">
@@ -53,31 +53,37 @@ export default defineComponent({
             // 元素对应的组件特有的属性表单项
             const componentFormItems = (
                 () => {
-                    let arr: any = [];
+                    // 如果有自定义的编辑器渲染函数，则使用该函数渲染组件属性编辑器
+                    if (component.editor) {
+                        return component.editor({ props: block.value.props, block: props.block })
+                    }
+
+                    let arr: any;
 
                     if (isArray(componentProps)) {
-                        arr = componentProps.map(group => {
-                            const { label, props } = group;
+                        arr = <ElCollapse>
+                            {
+                                componentProps.map((group, index) => {
+                                    const { label, props } = group;
 
-                            return (
-                                <div class="block-editor-group">
-                                    <div class="block-editor-group__title">{label}</div>
-                                    <div class="block-editor-group__content">
-                                        {
-                                            Object.entries(props).map(([propName, propConfig]) => {
-                                                const { type, label } = propConfig as any;
-                                                return <ElFormItem label={label} prop={propName}>
-                                                    {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
-                                                </ElFormItem>
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            )
-                        })
+                                    return (
+                                        <ElCollapseItem title={label} name={index}>
+                                            {
+                                                Object.entries(props).map(([propName, propConfig]) => {
+                                                    const { type, label } = propConfig as any;
+                                                    return <ElFormItem label={label} prop={propName}>
+                                                        {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
+                                                    </ElFormItem>
+                                                })
+                                            }
+                                        </ElCollapseItem>
+                                    )
+                                })
+                            }
+                        </ElCollapse>
                     }
                     else {
-                        arr = Object.entries(componentProps).map(([propName, propConfig]) => {
+                        arr = Object.entries(componentProps || {}).map(([propName, propConfig]) => {
                             const { type, label } = propConfig as any;
                             return <ElFormItem label={label} prop={propName}>
                                 {controlMap[type] && controlMap[type](blockData.props, propName, propConfig)}
@@ -87,12 +93,29 @@ export default defineComponent({
 
                     return arr;
                 }
-            )()
+            )();
+
+            // 数据绑定表单项
+            const databindFormItems = (() => {
+                let arr: any[] = [];
+                if (component?.model) {
+                    arr.push(Object.entries(component.model).map(([modelName, label]) => {
+                        return <ElFormItem label={label}>
+                            <ElInput v-model={blockData.model[modelName]}></ElInput>
+                        </ElFormItem>
+                    }));
+                }
+
+                return arr;
+            })();
 
             return (
                 <ElForm class="block-editor" labelWidth="100px" labelPosition="top">
-                    {commonFormItems}
-                    {componentFormItems}
+                    <ElTabs>
+                        <ElTabPane label="组件属性">{componentFormItems}</ElTabPane>
+                        <ElTabPane label="表单属性">{databindFormItems}</ElTabPane>
+                        <ElTabPane label="通用属性">{commonFormItems}</ElTabPane>
+                    </ElTabs>
                 </ElForm>
             )
         }

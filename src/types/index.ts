@@ -1,4 +1,4 @@
-import { VNode } from "vue";
+import { ComputedRef, VNode } from "vue";
 
 /** 容器配置数据 */
 export interface ContainerData {
@@ -7,7 +7,7 @@ export interface ContainerData {
 }
 
 /** 区块配置数据 */
-export interface BlockData {
+export interface BlockData<Props = Record<string, any>> {
     /** 组件类型 */
     type: string;
 
@@ -33,7 +33,7 @@ export interface BlockData {
     isFocused?: boolean;
 
     /** 组件属性 */
-    props: Record<string, any>;
+    props: Props;
 
     // /** 是否改变过大小 */
     // isResized?: boolean;
@@ -45,7 +45,9 @@ export interface BlockData {
 
         /** 高度 */
         height?: number;
-    }
+    },
+
+    model?: any
 }
 
 /** 大屏配置数据 */
@@ -62,12 +64,17 @@ export interface RegisterComponent<Props = any> {
     type: string;
     icon: string;
     category: string;
+    render: ({ props, size, model }: { props: Props, size: { width?: number, height?: number }, model: any }) => any;
     preview?: (...args: any) => any;
-    render: ({ props, size }: { props: Props, size: { width?: number, height?: number } }) => any;
-    props?: Props | Record<string, any> | ((props: Props) => VNode);
+    editor?: ({ props, block }: { props: Props, block: ComputedRef<BlockData<Props>> }) => VNode,
+    props?: Props | Record<string, any>;
     defaultProps?: Props | Record<string, any>;
     resize?: { width: boolean, height: boolean };
     defaultSize?: { width: number, height: number };
+    model?: {
+        default?: string;
+        [key: string]: any;
+    };
 }
 
 export interface ComponentCategory {
@@ -75,3 +82,7 @@ export interface ComponentCategory {
     value: string;
     icon: string;
 }
+
+export interface FormModel {
+    [key: string | number]: any;
+} 

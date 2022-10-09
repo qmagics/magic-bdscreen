@@ -1,7 +1,7 @@
 import '@/styles/editor/index.scss';
 import { computed, defineComponent, PropType, provide, ref, StyleValue } from "vue";
 import EditorHeader from './header';
-import { ConfigData } from "@/types";
+import { ConfigData, FormModel } from "@/types";
 import { deepClone } from "@/utils";
 import BlockItem from "./block-item";
 import ComponentLib from "./component-lib";
@@ -23,6 +23,10 @@ export default defineComponent({
     props: {
         modelValue: {
             type: Object as PropType<ConfigData>,
+            required: true
+        },
+        formData: {
+            type: Object as PropType<FormModel>,
             required: true
         }
     },
@@ -92,6 +96,7 @@ export default defineComponent({
                             return <BlockItem
                                 class={{ 'is--focused': block.isFocused }}
                                 block={block}
+                                formData={props.formData}
                                 scale={designStore.editorState.scale}
                                 onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
                                 onContextmenu={(e: MouseEvent) => triggerContextmenu(e, block)}
@@ -108,7 +113,7 @@ export default defineComponent({
                 <div class="preview-canvas" style={canvasStyle.value}>
                     {
                         configData.value?.blocks.map((block) => {
-                            return <BlockItem block={block}></BlockItem>
+                            return <BlockItem block={block} formData={props.formData}></BlockItem>
                         })
                     }
                 </div>
