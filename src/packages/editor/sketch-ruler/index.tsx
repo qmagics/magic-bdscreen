@@ -35,10 +35,10 @@ export default defineComponent({
             type: Object as PropType<{ x: number, y: number, width: number, height: number }>,
             default: () => {
                 return {
-                    x: 200,
-                    y: 100,
-                    width: 200,
-                    height: 400
+                    x: 0,
+                    y: 0,
+                    width: 500,
+                    height: 500
                 };
             },
         },

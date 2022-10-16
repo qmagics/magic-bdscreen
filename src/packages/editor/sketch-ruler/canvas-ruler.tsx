@@ -65,7 +65,7 @@ export default defineComponent({
 
             // 比例宽高
             canvasRef.value.width = width * ratio;
-            console.log(width);
+            // console.log(width);
             canvasRef.value.height = height * ratio;
 
             canvasContext.font = `${12 * ratio}px -apple-system, 

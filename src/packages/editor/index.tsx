@@ -40,8 +40,8 @@ export default defineComponent({
         // 容器元素
         const screenRef = ref();
 
-        // 滚动容器元素
-        const scrollContainerRef = ref();
+        const containerRef = ref();
+        const wrapperRef = ref();
 
         // 配置数据代理对象
         const configData = computed({
@@ -95,7 +95,7 @@ export default defineComponent({
         const { triggerContextmenu } = useBlockItemContextmenu(commandsState.commands);
 
         // 画布比例尺
-        const { sketchRulerProps } = useSketchRuler(configData, screenRef, scrollContainerRef);
+        const { sketchRulerProps, onScreenScroll } = useSketchRuler(configData, containerRef, screenRef, wrapperRef,canvasRef);
 
         return () => {
 
@@ -160,13 +160,15 @@ export default defineComponent({
 
                 <div class="editor-left-sidebar">{leftSidebar}</div>
 
-                <div class="editor-container" ref={screenRef}>
-                    <div class="editor-container__wrapper" ref={scrollContainerRef}>
-                        {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
+                <div class="editor-container" ref={containerRef}>
+                    <div class="editor-container__screen" ref={screenRef} onScroll={onScreenScroll}>
                         {/* <ActionHistory commandsState={commandsState}></ActionHistory> */}
                         {/* <CanvasScaler></CanvasScaler> */}
-                    </div>
 
+                        <div class="editor-container__wrapper" ref={wrapperRef}>
+                            {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
+                        </div>
+                    </div>
                     <SketchRuler {...sketchRulerProps}></SketchRuler>
                 </div>
 
