@@ -37,8 +37,8 @@ export default defineComponent({
                 return {
                     x: 0,
                     y: 0,
-                    width: 500,
-                    height: 500
+                    width: 0,
+                    height: 0
                 };
             },
         },

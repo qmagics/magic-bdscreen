@@ -71,8 +71,8 @@
         "id": "3",
         "title": "大屏三",
         "container": {
-            "width": 500,
-            "height": 500
+            "width": 800,
+            "height": 600
         },
         "blocks": []
     }

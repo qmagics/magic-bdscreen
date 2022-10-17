@@ -95,7 +95,7 @@ export default defineComponent({
         const { triggerContextmenu } = useBlockItemContextmenu(commandsState.commands);
 
         // 画布比例尺
-        const { sketchRulerProps, onScreenScroll } = useSketchRuler(configData, containerRef, screenRef, wrapperRef,canvasRef);
+        const { sketchRulerProps, onScreenScroll } = useSketchRuler({ configData, containerRef, screenRef, wrapperRef, canvasRef });
 
         return () => {
 
@@ -121,7 +121,7 @@ export default defineComponent({
 
             // 预览画布
             const previewCanvas = (
-                <div class="preview-canvas" style={canvasStyle.value}>
+                <div class="preview-canvas" style={canvasStyle.value} ref={canvasRef}>
                     {
                         configData.value?.blocks.map((block) => {
                             return <BlockItem block={block} formData={props.formData}></BlockItem>
@@ -169,7 +169,7 @@ export default defineComponent({
                             {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
                         </div>
                     </div>
-                    <SketchRuler {...sketchRulerProps}></SketchRuler>
+                    <SketchRuler {...sketchRulerProps.value}></SketchRuler>
                 </div>
 
                 <div class="editor-right-sidebar">{rightSidebar}</div>

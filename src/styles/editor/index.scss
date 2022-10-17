@@ -41,7 +41,8 @@
             }
         }
 
-        &-toolbar {}
+        &-toolbar {
+        }
     }
 
     &-left-sidebar,
@@ -69,7 +70,6 @@
 
     &-container {
         background-color: $bg-color-1;
-        // padding: $header-height $right-sidebar-width 0 $left-sidebar-width;
         box-sizing: border-box;
         transition: all 0.3s;
         display: flex;
@@ -78,39 +78,26 @@
         left: $left-sidebar-width;
         right: $right-sidebar-width;
         bottom: 0;
-        // width: 100%;
-        // height: 100%;
 
         &__screen {
             overflow: auto;
             box-sizing: border-box;
             position: relative;
-            // padding: 80px;
-            // margin: 0 auto;
         }
 
         &__wrapper {
-            width: 2000px;
-            height: 2000px;
+            width: 3000px;
+            height: 3000px;
         }
     }
 
     .editor-canvas {
-        // margin: $gutter auto;
         background-color: $bg-color-2;
-        // position: relative;
-
-        // position: absolute;
-        // top: 80px;
         margin: 80px auto;
-        // left: 50%;
-        // margin-left: -80px;
-        // transform-origin: 50% 0;
         position: relative;
     }
 
     .preview-canvas {
-        // margin: $gutter auto;
         background-color: $bg-color-2;
         margin: 80px auto;
         position: relative;
@@ -123,7 +110,6 @@
 
     // 编辑状态
     &.is--editing {
-
         // 重写编辑区内物料组件的样式，防止编辑时发生一些样式异常
         .el-button {
             transition: none;
@@ -158,7 +144,6 @@
         }
 
         .editor-container {
-            // padding: $header-height 0 0 0;
             left: 0;
             right: 0;
         }
@@ -284,7 +269,8 @@
         padding: $gutter;
     }
 
-    .block-editor {}
+    .block-editor {
+    }
 }
 
 // 历史记录面板
