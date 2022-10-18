@@ -47,10 +47,10 @@ export default defineComponent({
             default: () => {
                 return {
                     bgColor: 'rgba(225,225,225, 0)', // ruler bg color
-                    longfgColor: '#BABBBC', // ruler longer mark color
-                    shortfgColor: '#C8CDD0', // ruler shorter mark color
+                    longfgColor: 'rgba(225,225,225, 0.2)', // ruler longer mark color
+                    shortfgColor: 'rgba(225,225,225, 0.2)', // ruler shorter mark color
                     fontColor: '#7D8694', // ruler font color
-                    shadowColor: '#E8E8E8', // ruler shadow color
+                    shadowColor: 'rgba(225,225,225, 0.3)', // ruler shadow color
                     lineColor: '#EB5648',
                     borderColor: '#DADADC',
                     cornerActiveColor: 'rgb(235, 86, 72, 0.6)'
