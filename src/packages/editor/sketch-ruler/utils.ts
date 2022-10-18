@@ -27,6 +27,7 @@ export const drawHorizontalRuler = (ctx: CanvasRenderingContext2D, start: number
 
     // 2. 画阴影
     if (shadow) {
+        // console.log('shadow.width', shadow.width);
         const shadowX = (shadow.x - start) * scale // 阴影起点坐标
         const shadowWidth = shadow.width * scale // 阴影宽度
         ctx.fillStyle = shadowColor
@@ -98,6 +99,7 @@ export const drawVerticalRuler = (ctx: CanvasRenderingContext2D, start: number, 
 
     // 2. 画阴影
     if (shadow) {
+        // console.log('shadow.height', shadow.height);
         // 阴影起点坐标
         const posY = (shadow.y - start) * scale
         // 阴影高度

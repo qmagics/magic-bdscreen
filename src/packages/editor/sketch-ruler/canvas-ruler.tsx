@@ -65,7 +65,6 @@ export default defineComponent({
 
             // 比例宽高
             canvasRef.value.width = width * ratio;
-            // console.log(width);
             canvasRef.value.height = height * ratio;
 
             canvasContext.font = `${12 * ratio}px -apple-system, 
@@ -77,7 +76,7 @@ export default defineComponent({
         }
 
         watch(() => props.start, drawRuler);
-        watch([() => props.width, () => props.height], () => {
+        watch([() => props.scale, () => props.width, () => props.height, () => props.selectStart, () => props.selectLength], () => {
             updateContext();
             drawRuler();
         });

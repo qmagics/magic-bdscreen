@@ -72,15 +72,16 @@ export const useSketchRuler = ({ configData, containerRef, screenRef, wrapperRef
     }
 
     // 画布宽高变更，需要重新计算比例尺开始坐标
-    watch(() => configData.value.container, async () => {
+    watch([() => configData.value.container, () => editorState.scale], async () => {
         await nextTick();
         refreshRulerStartPos();
-    }, { deep: true, immediate: true })
+    }, { deep: true, immediate: true });
 
     return {
         sketchRulerProps: computed(() => {
             return {
                 ...sketchRulerProps,
+                scale: editorState.scale,
                 shadow: shadow.value
             }
         }),
