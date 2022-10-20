@@ -1,7 +1,8 @@
 import { MbImage } from "@/components/mb-image";
+import { MbTable } from "@/components/mb-table";
 import { Manager } from "@/packages/manager";
 import { createInputProp, createSelectProp, createPropGroup, createColorProp, createFontsizeSelect } from "@/utils/factory";
-import { ElButton, ElInput, ButtonProps, ElInputNumber } from 'element-plus';
+import { ElButton, ElInput, ButtonProps, ElInputNumber, Column } from 'element-plus';
 import { StyleValue } from "vue";
 
 // 统一注册物料组件
@@ -88,7 +89,7 @@ export default (manager: Manager) => {
     // 图片
     manager.registerComponent<{ src: string }>({
         name: "图片",
-        type: "image",
+        type: "mb-image",
         icon: "image",
         category: "basic",
         render: ({ props, size }) => {
@@ -103,6 +104,47 @@ export default (manager: Manager) => {
         defaultSize: {
             width: 100,
             height: 100
+        },
+        resize: {
+            width: true,
+            height: true
+        }
+    })
+
+    // 表格
+    manager.registerComponent<{ columns: Column[], data: Object[] }>({
+        name: "表格",
+        type: "mb-table",
+        icon: "table",
+        category: "basic",
+        render: ({ props, size }) => {
+            return <MbTable size={size} columns={props.columns} data={props.data}></MbTable>
+        },
+        defaultSize: {
+            width: 300,
+            height: 150,
+        },
+        defaultProps: {
+            columns: [
+                {
+                    label: "姓名",
+                    prop: "Name"
+                },
+                {
+                    label: "年龄",
+                    prop: "Age"
+                }
+            ],
+            data: [
+                {
+                    Name: "奥迪A7",
+                    Age: 12
+                },
+                {
+                    Name: "宝马5系",
+                    Age: 15
+                }
+            ]
         },
         resize: {
             width: true,

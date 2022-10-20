@@ -169,7 +169,7 @@ export default defineComponent({
                             {designStore.editorState.isPreview ? previewCanvas : editorCanvas}
                         </div>
                     </div>
-                    <SketchRuler {...sketchRulerProps.value}></SketchRuler>
+                    {!designStore.editorState.isPreview && <SketchRuler {...sketchRulerProps.value}></SketchRuler>}
                 </div>
 
                 <div class="editor-right-sidebar">{rightSidebar}</div>
