@@ -47,7 +47,9 @@ export interface BlockData<Props = Record<string, any>> {
         height?: number;
     },
 
-    model?: any
+    model?: any,
+
+    datasource: DataSource;
 }
 
 /** 大屏配置数据 */
@@ -85,4 +87,10 @@ export interface ComponentCategory {
 
 export interface FormModel {
     [key: string | number]: any;
-} 
+}
+
+export interface DataSource {
+    type?: number;
+    staticData?: any;
+    apiUrl?: string;
+}

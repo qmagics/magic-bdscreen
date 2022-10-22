@@ -1,5 +1,5 @@
 import '@/styles/editor/index.scss';
-import { computed, defineComponent, PropType, provide, ref, StyleValue } from "vue";
+import { computed, defineComponent, inject, PropType, provide, ref, StyleValue } from "vue";
 import EditorHeader from './header';
 import { ConfigData, FormModel } from "@/types";
 import { deepClone } from "@/utils";
@@ -14,7 +14,7 @@ import { useBlockItemDragger } from "./hooks/useBlockItemDragger";
 import useDesignStore from '@/store/design';
 import { useBlockItemContextmenu } from './hooks/useBlockItemContextmenu';
 import { useCommands } from './hooks/useCommands';
-import { COMMANDS_KEY } from '../tokens';
+import { COMMANDS_KEY, MANAGER_KEY } from '../tokens';
 import ActionHistory from './action-history';
 import CanvasScaler from './canvas-scaler';
 import { afterScale } from './utils';
@@ -36,6 +36,8 @@ export default defineComponent({
     setup: (props, { emit }) => {
 
         const designStore = useDesignStore();
+
+        const manager = inject(MANAGER_KEY)!;
 
         // 容器元素
         const screenRef = ref();
@@ -147,7 +149,16 @@ export default defineComponent({
                 <SidebarPanel>
                     {
                         {
-                            header: () => configData.value ? <div style={{ textAlign: "center" }}>{lastSelectedBlock?.value ? '元素属性' : '容器属性'}</div> : null,
+                            header: () => {
+                                if (!configData.value) return null;
+
+                                if (lastSelectedBlock.value) {
+                                    const compName = manager.getComponentByType(lastSelectedBlock.value.type).name;
+                                    return `[${compName}]属性`;
+                                } else {
+                                    return '容器属性';
+                                }
+                            },
                             default: () => configData.value ? <PropsEditor configData={configData} block={lastSelectedBlock}></PropsEditor> : null
                         }
                     }

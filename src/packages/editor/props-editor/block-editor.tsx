@@ -1,7 +1,7 @@
 import { MANAGER_KEY, COMMANDS_KEY } from "@/packages/tokens";
 import { BlockData } from "@/types";
 import { deepClone, isArray } from "@/utils";
-import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput, ElInputNumber, ElTabPane, ElTabs } from "element-plus";
+import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput, ElInputNumber, ElOption, ElSelect, ElTabPane, ElTabs } from "element-plus";
 import { ComputedRef, defineComponent, inject, PropType, reactive } from "vue";
 import controlMap from "./controlMap";
 import { watchDebounced } from '@vueuse/core';
@@ -109,12 +109,27 @@ export default defineComponent({
                 return arr;
             })();
 
+            // 数据源配置
+            const datasourceFormItems = (() => {
+                return <>
+                    <ElFormItem label="类型">
+                    {/* v-model={blockData.datasource.type} */}
+                        <ElSelect >
+                            <ElOption value={1}>静态数据</ElOption>
+                            <ElOption value={2}>API</ElOption>
+                            <ElOption value={3}>SQL</ElOption>
+                        </ElSelect>
+                    </ElFormItem>
+                </>
+            })();
+
             return (
                 <ElForm class="block-editor" labelWidth="100px" labelPosition="top">
                     <ElTabs>
-                        <ElTabPane label="组件属性">{componentFormItems}</ElTabPane>
-                        <ElTabPane label="表单属性">{databindFormItems}</ElTabPane>
-                        <ElTabPane label="通用属性">{commonFormItems}</ElTabPane>
+                        <ElTabPane label="属性">{componentFormItems}</ElTabPane>
+                        <ElTabPane label="数据源">{datasourceFormItems}</ElTabPane>
+                        <ElTabPane label="绑定">{databindFormItems}</ElTabPane>
+                        <ElTabPane label="通用">{commonFormItems}</ElTabPane>
                     </ElTabs>
                 </ElForm>
             )
