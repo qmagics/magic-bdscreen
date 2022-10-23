@@ -43,7 +43,8 @@ export const useMenuDragger = ({ canvasRef, configData }: UseMenuDraggerArgs) =>
             alignCenterWhenDrop: true,
             props: defaultProps,
             size: defaultSize || {},
-            model: {}
+            model: {},
+            datasource: component.defaultDatasource
         }
 
         const newConfigData = {

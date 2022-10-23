@@ -107,6 +107,7 @@ export default defineComponent({
                     {
                         configData.value?.blocks.map((block, index) => {
                             return <BlockItem
+                                key={block.type}
                                 class={{ 'is--focused': block.isFocused }}
                                 block={block}
                                 formData={props.formData}

@@ -1,9 +1,10 @@
 import { MANAGER_KEY } from "@/packages/tokens";
 import useDesignStore from "@/store/design";
-import { BlockData, FormModel } from "@/types";
-import { computed, defineComponent, inject, onMounted, PropType, ref, Ref, StyleValue } from "vue";
+import { BlockData, FormModel, RenderContextState } from "@/types";
+import { computed, defineComponent, inject, onMounted, PropType, reactive, ref, Ref, StyleValue, toRef } from "vue";
 import BlockResizer from "../block-resizer";
 import { afterScale, beforeScale } from "../utils";
+import { useData } from "./useData";
 
 // 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
@@ -30,10 +31,6 @@ export default defineComponent({
         formData: {
             type: Object as PropType<FormModel>,
             required: true
-        },
-        scale: {
-            type: Number,
-            default: 1
         }
     },
     setup: (props) => {
@@ -42,6 +39,10 @@ export default defineComponent({
         const manager = inject(MANAGER_KEY)!;
 
         const blockRef = ref<HTMLDivElement>();
+
+        const state = reactive<RenderContextState>({
+            loading: false
+        });
 
         const blockStyle = computed<StyleValue>(() => {
             let { left, top, zIndex } = props.block;
@@ -58,6 +59,8 @@ export default defineComponent({
 
         useAdjustElement(props.block, blockRef);
 
+        const { data } = useData({ block: toRef(props, 'block'), state });
+
         return () => {
             const component = manager.getComponentByType(props.block.type);
 
@@ -69,6 +72,8 @@ export default defineComponent({
             const renderedComponent = component.render({
                 props: props.block.props || {},
                 size: { width, height },
+                data: data.value,
+                state,
                 model: Object.keys(component.model || {}).reduce((pre: any, modelName: string) => {
                     let propName = props.block.model[modelName];
 

@@ -1,5 +1,5 @@
 import { MANAGER_KEY, COMMANDS_KEY } from "@/packages/tokens";
-import { BlockData } from "@/types";
+import { BlockData, DataSourceType } from "@/types";
 import { deepClone, isArray } from "@/utils";
 import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput, ElInputNumber, ElOption, ElSelect, ElTabPane, ElTabs } from "element-plus";
 import { ComputedRef, defineComponent, inject, PropType, reactive } from "vue";
@@ -24,7 +24,7 @@ export default defineComponent({
             const componentProps = component.props;
 
             // 重新构建属性编辑对象（不能直接修改，因为要添加进操作历史记录）
-            const blockData = reactive(deepClone(block.value));
+            const blockData = reactive<BlockData>(deepClone(block.value));
 
             // 监听并触发变更事件，需要防抖
             watchDebounced(blockData, (data) => {
@@ -111,15 +111,20 @@ export default defineComponent({
 
             // 数据源配置
             const datasourceFormItems = (() => {
+                if (!blockData.datasource) return;
+
                 return <>
                     <ElFormItem label="类型">
-                    {/* v-model={blockData.datasource.type} */}
-                        <ElSelect >
-                            <ElOption value={1}>静态数据</ElOption>
-                            <ElOption value={2}>API</ElOption>
-                            <ElOption value={3}>SQL</ElOption>
+                        <ElSelect v-model={blockData.datasource.type}>
+                            <ElOption value={1} label="静态数据"></ElOption>
+                            <ElOption value={2} label="API"></ElOption>
                         </ElSelect>
                     </ElFormItem>
+                    {blockData.datasource.type === DataSourceType.API &&
+                        <ElFormItem label="API接口地址">
+                            <ElInput v-model={blockData.datasource.apiUrl}></ElInput>
+                        </ElFormItem>
+                    }
                 </>
             })();
 

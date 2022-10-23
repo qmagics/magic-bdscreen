@@ -1,9 +1,11 @@
 import { MbImage } from "@/components/mb-image";
 import { MbTable } from "@/components/mb-table";
 import { Manager } from "@/packages/manager";
+import { DataSourceType } from "@/types";
 import { createInputProp, createSelectProp, createPropGroup, createColorProp, createFontsizeSelect } from "@/utils/factory";
+import request from "@/utils/request";
 import { ElButton, ElInput, ButtonProps, ElInputNumber, Column } from 'element-plus';
-import { StyleValue } from "vue";
+import { ref, StyleValue } from "vue";
 
 // 统一注册物料组件
 export default (manager: Manager) => {
@@ -112,13 +114,13 @@ export default (manager: Manager) => {
     })
 
     // 表格
-    manager.registerComponent<{ columns: Column[], data: Object[] }>({
+    manager.registerComponent<{ columns: Column[] }>({
         name: "表格",
         type: "mb-table",
         icon: "table",
         category: "basic",
-        render: ({ props, size }) => {
-            return <MbTable size={size} columns={props.columns} data={props.data}></MbTable>
+        render: ({ props, size, data, state }) => {
+            return <MbTable size={size} columns={props.columns} data={data} loading={state.loading}></MbTable>
         },
         defaultSize: {
             width: 300,
@@ -127,28 +129,36 @@ export default (manager: Manager) => {
         defaultProps: {
             columns: [
                 {
-                    label: "姓名",
+                    label: "品牌",
+                    prop: "Brand"
+                },
+                {
+                    label: "车型",
                     prop: "Name"
                 },
                 {
-                    label: "年龄",
-                    prop: "Age"
-                }
-            ],
-            data: [
-                {
-                    Name: "奥迪A7",
-                    Age: 12
-                },
-                {
-                    Name: "宝马5系",
-                    Age: 15
+                    label: "价格",
+                    prop: "Price"
                 }
             ]
         },
         resize: {
             width: true,
             height: true
+        },
+        defaultDatasource: {
+            type: DataSourceType.API,
+            apiUrl: "http://localhost:3000/car/list"
+            // staticData: JSON.stringify([
+            //     {
+            //         Name: "奥迪A7",
+            //         Age: 12
+            //     },
+            //     {
+            //         Name: "宝马5系",
+            //         Age: 15
+            //     }
+            // ])
         }
     })
 
