@@ -1,4 +1,4 @@
-import MbTable from './src/mb-table.vue';
+import MbTable from './src/mb-table';
 import { App } from 'vue';
 
 export default (app: App) => {
