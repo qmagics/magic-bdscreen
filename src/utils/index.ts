@@ -45,3 +45,14 @@ export const isFunction = isType('Function');
 
 /** 是否是数组 */
 export const isArray = Array.isArray;
+
+/** 将变量转化为有效的css属性值 */
+export const parseCssValue = (v: string | number | undefined | null) => {
+    if (isNumber(v)) return v + 'px';
+    return v || '';
+}
+
+/** 值有变更 */
+export const hasChanged = (v1: unknown, v2: unknown) => {
+    return v1 !== v2;
+}

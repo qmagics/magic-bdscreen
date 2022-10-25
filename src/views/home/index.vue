@@ -14,5 +14,5 @@ refresh();
 </script>
 
 <template>
-    <router-link style="padding:20px;" v-for="i in items" :to="`/design/${i.id}`">{{i.title}}</router-link>
+    <router-link style="padding:20px;" v-for="i in items" :to="`/design/${i.id}`">{{ i.title }}</router-link>
 </template>

@@ -1,3 +1,4 @@
+import { CodeEditor } from "@/components/code-editor";
 import { Dialog } from "@/components/dialog";
 import { Dropdown } from "@/components/dropdown";
 import DropdownItem from "@/components/dropdown/src/dropdown-item";
@@ -32,8 +33,13 @@ export const useBlockItemContextmenu = (commands: UseCommandsState['commands']) 
             handler(e, block) {
                 Dialog({
                     title: "查看区块JSON",
-                    render() {
-                        return <ElInput type="textarea" modelValue={JSON.stringify(block)} rows={10}></ElInput>
+                    data: {
+                        content: JSON.stringify(block)
+                    },
+                    render(data) {
+                        return <div style="height:500px;">
+                            <CodeEditor v-model={data.content} options={{ language: 'json' }}></CodeEditor>
+                        </div>
                     },
                     btns: false,
                 })
