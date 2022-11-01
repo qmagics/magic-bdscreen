@@ -1,7 +1,7 @@
 import { defineComponent, onMounted, ref, computed, onBeforeUnmount, watch, PropType, nextTick } from "vue";
 import './init-monaco-env';
 import * as monaco from 'monaco-editor';
-import { hasChanged, parseCssValue } from "@/utils";
+import { hasChanged, parseCssValue, sleep } from "@/utils";
 import { DEFAULT_OPTIONS } from "./config";
 import { useERD } from "@/hooks/useERD";
 
@@ -42,7 +42,7 @@ export default defineComponent({
             return {
                 ...DEFAULT_OPTIONS,
                 ...props.options,
-                value: props.modelValue
+                readOnly: false,
             }
         });
 
@@ -60,7 +60,6 @@ export default defineComponent({
             editor?.updateOptions(v);
         });
 
-
         onMounted(async () => {
             await nextTick();
             editor = monaco.editor.create(editorRef.value, options.value);
@@ -71,6 +70,12 @@ export default defineComponent({
                     emit('update:modelValue', newVal);
                 }
             });
+
+            editor.setValue(props.modelValue);
+
+            if (props.options.readOnly) {
+                editor.updateOptions({ readOnly: true });
+            }
 
             useERD(editorRef.value, () => {
                 editor?.layout();

@@ -2,6 +2,7 @@ import { BlockData, DataSourceType, RenderContextState } from "@/types";
 import request from "@/utils/request";
 import { watchDebounced } from "@vueuse/core";
 import { Ref, ref, watch } from "vue";
+import { parseJSON } from "../utils";
 
 export interface UseDataParams {
     block: Ref<BlockData>;
@@ -33,7 +34,9 @@ export const useData = ({ block, state }: UseDataParams) => {
             refresh();
         }
         else if (type === DataSourceType.STATIC) {
-            data.value = staticData;
+            if (staticData) {
+                data.value = parseJSON(staticData);
+            }
         }
     }, { immediate: true });
 

@@ -5,6 +5,7 @@ import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput, ElInputNumber,
 import { ComputedRef, defineComponent, inject, PropType, reactive } from "vue";
 import controlMap from "./controlMap";
 import { watchDebounced } from '@vueuse/core';
+import DatasourcePanel from "./datasource-panel";
 
 export default defineComponent({
     props: {
@@ -113,19 +114,7 @@ export default defineComponent({
             const datasourceFormItems = (() => {
                 if (!blockData.datasource) return;
 
-                return <>
-                    <ElFormItem label="类型">
-                        <ElSelect v-model={blockData.datasource.type}>
-                            <ElOption value={1} label="静态数据"></ElOption>
-                            <ElOption value={2} label="API"></ElOption>
-                        </ElSelect>
-                    </ElFormItem>
-                    {blockData.datasource.type === DataSourceType.API &&
-                        <ElFormItem label="API接口地址">
-                            <ElInput v-model={blockData.datasource.apiUrl}></ElInput>
-                        </ElFormItem>
-                    }
-                </>
+                return <DatasourcePanel blockData={blockData as any}></DatasourcePanel>
             })();
 
             return (

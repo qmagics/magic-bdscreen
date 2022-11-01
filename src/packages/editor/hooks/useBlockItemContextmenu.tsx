@@ -3,8 +3,9 @@ import { Dialog } from "@/components/dialog";
 import { Dropdown } from "@/components/dropdown";
 import DropdownItem from "@/components/dropdown/src/dropdown-item";
 import { BlockData } from "@/types"
-import { ElInput } from "element-plus";
+import { editCode, viewCode } from "@/utils/code-dialog";
 import { ref } from "vue";
+import { parseJSON, serializeJSON } from "../utils";
 import { UseCommandsState } from "./useCommands";
 
 interface DropdownButtonData {
@@ -31,35 +32,23 @@ export const useBlockItemContextmenu = (commands: UseCommandsState['commands']) 
         {
             label: "查看JSON",
             handler(e, block) {
-                Dialog({
+                viewCode({
                     title: "查看区块JSON",
-                    data: {
-                        content: JSON.stringify(block)
-                    },
-                    render(data) {
-                        return <div style="height:500px;">
-                            <CodeEditor v-model={data.content} options={{ language: 'json' }}></CodeEditor>
-                        </div>
-                    },
-                    btns: false,
+                    language:"json",
+                    code: serializeJSON(block)
                 })
             }
         },
         {
             label: "导入",
             handler(e, block) {
-                const dlg = Dialog<{ content: string }>({
+                editCode({
                     title: "导入区块JSON",
-                    data: { content: "" },
-                    render(data) {
-                        return <ElInput type="textarea" v-model={data.content} rows={10}></ElInput>
-                    },
-                    onConfirm(data) {
-                        const newBlock = JSON.parse(data.content);
-
+                    language:"json",
+                    code: serializeJSON(block),
+                    onConfirm(code) {
+                        const newBlock = parseJSON(code);
                         commands.updateBlock(newBlock, block);
-
-                        dlg.hide();
                     },
                 });
             }

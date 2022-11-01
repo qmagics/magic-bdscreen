@@ -4,7 +4,7 @@ const { sleep } = require('./utils');
 const router = new KoaRouter();
 
 router.get('/car/list', async (ctx) => {
-    await sleep(1000);
+    await sleep(500);
 
     ctx.body = {
         code: 1,
@@ -29,7 +29,7 @@ router.get('/car/list', async (ctx) => {
 });
 
 router.get('/car/list2', async (ctx) => {
-    await sleep(1000);
+    await sleep(500);
 
     ctx.body = {
         code: 1,

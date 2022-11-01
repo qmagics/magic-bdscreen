@@ -151,14 +151,21 @@ export default (manager: Manager) => {
             apiUrl: "http://localhost:3000/car/list"
             // staticData: JSON.stringify([
             //     {
+            //         Brand: "奥迪",
             //         Name: "奥迪A7",
-            //         Age: 12
+            //         Price: 568000
             //     },
             //     {
+            //         Brand: "宝马",
             //         Name: "宝马5系",
-            //         Age: 15
+            //         Price: 526000
+            //     },
+            //     {
+            //         Brand: "本田",
+            //         Name: "雅阁",
+            //         Price: 213000
             //     }
-            // ])
+            // ],null,2)
         }
     })
 
