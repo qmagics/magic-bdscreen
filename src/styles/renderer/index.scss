@@ -1,0 +1,21 @@
+@import "./var.scss";
+
+// 编辑器
+.renderer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    color: $text-color-2;
+
+    &-canvas {
+        position: relative;
+        background-color: #27262e;
+    }
+
+    // 区块组件
+    .block-item {
+        position: absolute;
+    }
+}

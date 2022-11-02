@@ -3,33 +3,91 @@
         "id": "1",
         "title": "大屏一",
         "container": {
-            "width": 600,
-            "height": 600
+            "width": 500,
+            "height": 500
         },
         "blocks": [
             {
-                "props": {},
-                "size": {},
+                "top": 57,
+                "left": 0,
+                "zIndex": 1,
+                "type": "mb-table",
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "columns": [
+                        {
+                            "label": "品牌",
+                            "prop": "Brand"
+                        },
+                        {
+                            "label": "车型",
+                            "prop": "Name"
+                        },
+                        {
+                            "label": "价格",
+                            "prop": "Price"
+                        }
+                    ]
+                },
+                "size": {
+                    "width": 300,
+                    "height": 150
+                },
+                "model": {},
+                "datasource": {
+                    "type": 2,
+                    "apiUrl": "http://localhost:3000/car/list"
+                },
+                "isFocused": false
+            },
+            {
+                "top": 215,
+                "left": 0,
+                "zIndex": 1,
+                "type": "mb-table",
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "columns": [
+                        {
+                            "label": "品牌",
+                            "prop": "Brand"
+                        },
+                        {
+                            "label": "车型",
+                            "prop": "Name"
+                        },
+                        {
+                            "label": "价格",
+                            "prop": "Price"
+                        }
+                    ]
+                },
+                "size": {
+                    "width": 300,
+                    "height": 150
+                },
+                "model": {},
+                "datasource": {
+                    "type": 2,
+                    "apiUrl": "http://localhost:3000/car/list"
+                },
+                "isFocused": false
+            },
+            {
+                "top": 0,
+                "left": 102,
+                "zIndex": 1,
                 "type": "text",
-                "left": 100,
-                "top": 100,
-                "zIndex": 1
-            },
-            {
-                "props": {},
-                "size": {},
-                "type": "button",
-                "left": 200,
-                "top": 100,
-                "zIndex": 1
-            },
-            {
-                "props": {},
-                "size": {},
-                "type": "input",
-                "left": 200,
-                "top": 200,
-                "zIndex": 2
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "text": "一段文本"
+                },
+                "size": {
+                    "width": 56,
+                    "height": 19
+                },
+                "model": {},
+                "isFocused": false
             }
         ]
     },
@@ -37,33 +95,57 @@
         "id": "2",
         "title": "大屏二",
         "container": {
-            "width": 1000,
-            "height": 800
+            "width": 500,
+            "height": 500
         },
         "blocks": [
             {
-                "props": {},
-                "size": {},
-                "type": "button",
-                "left": 100,
-                "top": 100,
-                "zIndex": 1
+                "top": 35,
+                "left": 27,
+                "zIndex": 1,
+                "type": "mb-image",
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "src": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.11665.com%2Fimg_p5%2Fi2%2F2201287339141%2FO1CN01yxhAXF2HOd84CRDJz_%21%212201287339141.jpg&refer=http%3A%2F%2Fimg.11665.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652368911&t=0f229c9586d21e9dd8257fdd9ccab0d7"
+                },
+                "size": {
+                    "width": 100,
+                    "height": 100
+                },
+                "model": {},
+                "isFocused": false
             },
             {
-                "props": {},
-                "size": {},
-                "type": "button",
-                "left": 200,
-                "top": 100,
-                "zIndex": 1
+                "top": 149,
+                "left": 135,
+                "zIndex": 1,
+                "type": "mb-image",
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "src": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.11665.com%2Fimg_p5%2Fi2%2F2201287339141%2FO1CN01yxhAXF2HOd84CRDJz_%21%212201287339141.jpg&refer=http%3A%2F%2Fimg.11665.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652368911&t=0f229c9586d21e9dd8257fdd9ccab0d7"
+                },
+                "size": {
+                    "width": 100,
+                    "height": 100
+                },
+                "model": {},
+                "isFocused": false
             },
             {
-                "props": {},
-                "size": {},
-                "type": "button",
-                "left": 300,
-                "top": 200,
-                "zIndex": 1
+                "top": 265,
+                "left": 250,
+                "zIndex": 1,
+                "type": "mb-image",
+                "alignCenterWhenDrop": false,
+                "props": {
+                    "src": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.11665.com%2Fimg_p5%2Fi2%2F2201287339141%2FO1CN01yxhAXF2HOd84CRDJz_%21%212201287339141.jpg&refer=http%3A%2F%2Fimg.11665.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652368911&t=0f229c9586d21e9dd8257fdd9ccab0d7"
+                },
+                "size": {
+                    "width": 100,
+                    "height": 100
+                },
+                "model": {},
+                "isFocused": true
             }
         ]
     },

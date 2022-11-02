@@ -22,6 +22,14 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: '/view/:id',
+        component: () => import('@/views/view/index.vue'),
+        props: true,
+        meta: {
+            title: "大屏查看"
+        }
+    },
+    {
         path: "/404",
         component: () => import("@/views/common/404.vue")
     },

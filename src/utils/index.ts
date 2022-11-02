@@ -56,3 +56,16 @@ export const parseCssValue = (v: string | number | undefined | null) => {
 export const hasChanged = (v1: unknown, v2: unknown) => {
     return v1 !== v2;
 }
+
+export const serializeJSON = (v: any): string => {
+    return JSON.stringify(v, null, 2);
+}
+
+export const parseJSON = <T = any>(v: string): T => {
+    let res: any = null;
+    try {
+        res = JSON.parse(v);
+    } catch (error) {
+    }
+    return res;
+}

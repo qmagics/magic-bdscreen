@@ -5,7 +5,7 @@ import DropdownItem from "@/components/dropdown/src/dropdown-item";
 import { BlockData } from "@/types"
 import { editCode, viewCode } from "@/utils/code-dialog";
 import { ref } from "vue";
-import { parseJSON, serializeJSON } from "../utils";
+import { parseJSON, serializeJSON } from "@/utils";
 import { UseCommandsState } from "./useCommands";
 
 interface DropdownButtonData {

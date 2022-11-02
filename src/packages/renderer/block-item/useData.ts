@@ -1,7 +1,6 @@
 import { BlockData, DataSourceType, RenderContextState } from "@/types";
 import request from "@/utils/request";
-import { watchDebounced } from "@vueuse/core";
-import { Ref, ref, watch } from "vue";
+import { Ref, ref } from "vue";
 import { parseJSON } from "@/utils";
 
 export interface UseDataParams {
@@ -23,7 +22,7 @@ export const useData = ({ block, state }: UseDataParams) => {
         data.value = res.data.data;
     }
 
-    watchDebounced([() => block.value.datasource?.apiUrl, () => block.value.datasource?.type, () => block.value.datasource?.staticData], () => {
+    const init = () => {
         const v = block.value.datasource;
 
         if (!v) return;
@@ -38,7 +37,9 @@ export const useData = ({ block, state }: UseDataParams) => {
                 data.value = parseJSON(staticData);
             }
         }
-    }, { immediate: true });
+    }
+
+    init();
 
     return {
         data,

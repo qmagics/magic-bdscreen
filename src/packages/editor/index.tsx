@@ -111,7 +111,6 @@ export default defineComponent({
                                 class={{ 'is--focused': block.isFocused }}
                                 block={block}
                                 formData={props.formData}
-                                scale={designStore.editorState.scale}
                                 onMousedown={(e: MouseEvent) => triggerBlockItemMousedown(e, block, index)}
                                 onContextmenu={(e: MouseEvent) => triggerContextmenu(e, block)}
                             ></BlockItem>
