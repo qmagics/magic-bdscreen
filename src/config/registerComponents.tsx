@@ -1,11 +1,13 @@
+import { MbChartBar } from "@/components/mb-chart-bar";
 import { MbImage } from "@/components/mb-image";
 import { MbTable } from "@/components/mb-table";
 import { Manager } from "@/packages/manager";
+import { ECOption } from "@/plugins/echarts";
 import { DataSourceType } from "@/types";
+import { serializeJSON } from "@/utils";
 import { createInputProp, createSelectProp, createPropGroup, createColorProp, createFontsizeSelect } from "@/utils/factory";
-import request from "@/utils/request";
-import { ElButton, ElInput, ButtonProps, ElInputNumber, Column } from 'element-plus';
-import { ref, StyleValue } from "vue";
+import { ElButton, ElInput, ButtonProps, Column } from 'element-plus';
+import { StyleValue } from "vue";
 
 // 统一注册物料组件
 export default (manager: Manager) => {
@@ -214,4 +216,74 @@ export default (manager: Manager) => {
             default: "绑定字段"
         }
     })
+
+
+
+    // ========== 图表 ==========
+
+    // 柱状图
+    manager.registerComponent<{ option: ECOption }>({
+        name: "柱状图",
+        type: "mb-chart-bar",
+        icon: "chart-bar",
+        category: "chart",
+        render: ({ props, size, data, state }) => {
+            return <MbChartBar {...props} size={size} data={data} loading={state.loading}></MbChartBar>
+        },
+        defaultSize: {
+            width: 300,
+            height: 150,
+        },
+        resize: {
+            width: true,
+            height: true
+        },
+        defaultDatasource: {
+            type: DataSourceType.STATIC,
+            // apiUrl: "http://localhost:3000/car/list",
+            staticData: serializeJSON({
+                categories: [
+                    '奥迪',
+                    '宝马',
+                    '奔驰'
+                ],
+                series: [
+                    {
+                        name: "售价",
+                        data: [
+                            120000,
+                            346000,
+                            286000
+                        ]
+                    }
+                ]
+            })
+        }
+    });
+
+
+    // 饼图
+    manager.registerComponent<{ columns: Column[] }>({
+        name: "饼图",
+        type: "mb-chart-pie",
+        icon: "chart-pie",
+        category: "chart",
+        render: ({ props, size, data, state }) => {
+            return <div>...</div>
+        },
+        defaultSize: {
+            width: 100,
+            height: 100,
+        },
+        resize: {
+            width: true,
+            height: true
+        },
+        defaultDatasource: {
+            type: DataSourceType.API,
+            apiUrl: "http://localhost:3000/car/list"
+        }
+    })
+
+
 }

@@ -35,7 +35,7 @@ export const editCode = (options: CodeDialogOptions) => {
         data: { code },
         render(data) {
             return <div style="height:500px;">
-                <CodeEditor v-model={data.code} options={{ language }}></CodeEditor>
+                <CodeEditor v-model={data.code} options={{ language }} height="100%"></CodeEditor>
             </div>
         },
         async onConfirm(data) {
@@ -67,7 +67,7 @@ export const viewCode = (options: CodeDialogOptions) => {
         title,
         render() {
             return <div style="height:500px;">
-                <CodeEditor modelValue={code} options={{ language, readOnly: true }}></CodeEditor>
+                <CodeEditor modelValue={code} options={{ language, readOnly: true }} height="100%"></CodeEditor>
             </div>
         },
         btns: false,

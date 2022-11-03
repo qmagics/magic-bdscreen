@@ -50,7 +50,7 @@ export default defineComponent({
                         header: renderHeader && renderHeader(state.options.data),
                         footer: renderFooter ? renderFooter(state.options.data) : state.options.btns === false ? null : () => {
                             return <div>
-                                <ElButton type="success" onClick={() => { onConfirm && onConfirm(state.options.data) }}>确认</ElButton>
+                                <ElButton type="primary" onClick={() => { onConfirm && onConfirm(state.options.data) }}>确认</ElButton>
                                 <ElButton onClick={() => { onCancel ? onCancel() : hide() }}>取消</ElButton>
                             </div>
                         }

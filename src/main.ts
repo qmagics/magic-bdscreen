@@ -7,9 +7,10 @@ import { ElButton, ElInput, ElLoading } from 'element-plus';
 import App from './App.vue';
 import router from '@/router';
 import SvgIcon from '@/components/svg-icon';
+import '@/plugins/echarts';
 
 // 导入字体
-import "//at.alicdn.com/t/c/font_3664032_b55t2mtxvbs.js";
+import "//at.alicdn.com/t/c/font_3664032_hgl2336cy9d.js";
 
 // 创建应用
 const app = createApp(App);

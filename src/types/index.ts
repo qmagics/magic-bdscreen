@@ -149,6 +149,9 @@ export interface DataSource {
 
     /** API接口地址 */
     apiUrl?: string;
+
+    /** 数据处理函数 */
+    formatter?: string;
 }
 
 /** 数据源类型枚举 */

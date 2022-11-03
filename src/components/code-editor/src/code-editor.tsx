@@ -13,7 +13,7 @@ export default defineComponent({
         },
         height: {
             type: [Number, String],
-            default: 400
+            default: 250
         },
         modelValue: {
             type: String,

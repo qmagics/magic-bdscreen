@@ -41,8 +41,7 @@
             }
         }
 
-        &-toolbar {
-        }
+        &-toolbar {}
     }
 
     &-left-sidebar,
@@ -110,6 +109,7 @@
 
     // 编辑状态
     &.is--editing {
+
         // 重写编辑区内物料组件的样式，防止编辑时发生一些样式异常
         .el-button {
             transition: none;
@@ -272,6 +272,13 @@
     }
 
     .block-editor {
+        .el-tabs__nav-wrap {
+            padding: 0 $gutter;
+        }
+
+        .el-tab-pane {
+            padding: 0 $gutter;
+        }
     }
 }
 
