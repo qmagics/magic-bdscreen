@@ -1,0 +1,13 @@
+$header_height:40px;
+$body_height:250px;
+
+.code-editor-plus {
+
+    &__header {
+        height: $header_height;
+    }
+
+    &__body {
+        height: $body_height;
+    }
+}

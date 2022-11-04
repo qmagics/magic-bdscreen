@@ -1,4 +1,5 @@
 import { CodeEditor } from "@/components/code-editor";
+import { CodeEditorPlus } from "@/components/code-editor-plus";
 import { BlockData, DataSource, DataSourceType } from "@/types";
 import { ElFormItem, ElSelect, ElOption, ElInput } from "element-plus";
 import { defineComponent, PropType, toRef } from "vue";
@@ -32,7 +33,7 @@ export default defineComponent({
                     </ElFormItem>
                 }
                 <ElFormItem label="格式化">
-                    <CodeEditor v-model={block.value.datasource.formatter}></CodeEditor>
+                    <CodeEditorPlus v-model={block.value.datasource.formatter}></CodeEditorPlus>
                 </ElFormItem>
             </>
         }
