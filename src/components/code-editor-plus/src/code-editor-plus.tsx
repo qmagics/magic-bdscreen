@@ -31,6 +31,7 @@ export default defineComponent({
             createCodeDialog({
                 title: "编辑代码",
                 description: props.description,
+                language: props.options.language,
                 code: code.value,
                 onConfirm: v => code.value = v
             })
