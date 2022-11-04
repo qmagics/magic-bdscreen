@@ -14,28 +14,34 @@ export interface CodeDialogOptions {
 
     /** 编辑确认 */
     onConfirm?: (code: string) => void;
+
+    /** 描述 */
+    description?: string;
 }
 
-const EDIT_DEFAULT_OPTIONS = {
-    title: '编辑代码',
+const DEFAULT_OPTIONS = {
+    title: '代码内容',
     language: 'javascript'
 }
 
-
 /**
- * 编辑代码
+ * 创建代码弹窗
  * @param options 
  */
-export const editCode = (options: CodeDialogOptions) => {
-
-    const { title, code, language, onConfirm } = { ...EDIT_DEFAULT_OPTIONS, ...options };
+export const createCodeDialog = (options: CodeDialogOptions) => {
+    const { title, code, language, onConfirm } = { ...DEFAULT_OPTIONS, ...options };
 
     const dlg = Dialog({
         title,
         data: { code },
         render(data) {
-            return <div style="height:500px;">
-                <CodeEditor v-model={data.code} options={{ language }} height="100%"></CodeEditor>
+            return <div class="code-dialog">
+                <div class="code-dialog__header">
+                    {options.description && <CodeEditor modelValue={options.description} height={50} options={{ language: 'markdown', readOnly: true }}></CodeEditor>}
+                </div>
+                <div class="code-dialog__body">
+                    <CodeEditor v-model={data.code} options={{ language }} height="100%"></CodeEditor>
+                </div>
             </div>
         },
         async onConfirm(data) {
@@ -50,10 +56,12 @@ export const editCode = (options: CodeDialogOptions) => {
     return dlg;
 }
 
-
-const VIEW_DEFAULT_OPTIONS = {
-    title: '查看代码',
-    language: 'javascript'
+/**
+ * 编辑代码
+ * @param options 
+ */
+export const editCode = (options: CodeDialogOptions) => {
+    return createCodeDialog({ ...options, title: '编辑代码' });
 }
 
 /**
@@ -61,15 +69,5 @@ const VIEW_DEFAULT_OPTIONS = {
  * @param options 
  */
 export const viewCode = (options: CodeDialogOptions) => {
-    const { title, code, language } = { ...options, ...VIEW_DEFAULT_OPTIONS };
-
-    return Dialog({
-        title,
-        render() {
-            return <div style="height:500px;">
-                <CodeEditor modelValue={code} options={{ language, readOnly: true }} height="100%"></CodeEditor>
-            </div>
-        },
-        btns: false,
-    })
+    return createCodeDialog({ ...options, title: '查看代码' });
 }

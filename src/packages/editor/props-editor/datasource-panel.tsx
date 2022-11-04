@@ -1,8 +1,9 @@
 import { CodeEditor } from "@/components/code-editor";
 import { CodeEditorPlus } from "@/components/code-editor-plus";
+import { MANAGER_KEY } from "@/packages/tokens";
 import { BlockData, DataSource, DataSourceType } from "@/types";
 import { ElFormItem, ElSelect, ElOption, ElInput } from "element-plus";
-import { defineComponent, PropType, toRef } from "vue";
+import { defineComponent, inject, PropType, toRef } from "vue";
 
 export default defineComponent({
     props: {
@@ -12,28 +13,34 @@ export default defineComponent({
         }
     },
     setup(props) {
+        const manager = inject(MANAGER_KEY)!;
+
         const block = toRef(props, 'blockData');
 
+        const component = manager.getComponentByType(block.value.type);
+
         return () => {
+            const datasource = block.value.datasource;
+
             return <>
                 <ElFormItem label="类型">
-                    <ElSelect v-model={block.value.datasource.type}>
+                    <ElSelect v-model={datasource.type}>
                         <ElOption value={DataSourceType.STATIC} label="静态数据"></ElOption>
                         <ElOption value={DataSourceType.API} label="API"></ElOption>
                     </ElSelect>
                 </ElFormItem>
-                {block.value.datasource.type === DataSourceType.API &&
+                {datasource.type === DataSourceType.API &&
                     <ElFormItem label="API接口地址">
-                        <ElInput v-model={block.value.datasource.apiUrl}></ElInput>
+                        <ElInput v-model={datasource.apiUrl}></ElInput>
                     </ElFormItem>
                 }
-                {block.value.datasource.type === DataSourceType.STATIC &&
+                {datasource.type === DataSourceType.STATIC &&
                     <ElFormItem label="静态内容">
-                        <CodeEditor v-model={block.value.datasource.staticData} options={{ language: "json" }}></CodeEditor>
+                        <CodeEditor v-model={datasource.staticData} options={{ language: "json" }}></CodeEditor>
                     </ElFormItem>
                 }
                 <ElFormItem label="格式化">
-                    <CodeEditorPlus v-model={block.value.datasource.formatter}></CodeEditorPlus>
+                    <CodeEditorPlus v-model={datasource.formatter} description={component.datasourceFormatterDesc} options={{ language: "javascript" }}></CodeEditorPlus>
                 </ElFormItem>
             </>
         }

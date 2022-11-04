@@ -50,8 +50,9 @@ export default defineComponent({
             editor?.layout();
         });
 
-        watch(() => props.modelValue, (v) => {
-            if (hasChanged(props.modelValue, v)) {
+        watch(() => props.modelValue, (v, oldV) => {
+            // if(hasChanged(props.modelValue, v)) {
+            if (hasChanged(v, oldV)) {
                 editor?.setValue(v);
             }
         });

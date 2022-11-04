@@ -258,7 +258,8 @@ export default (manager: Manager) => {
                     }
                 ]
             })
-        }
+        },
+        datasourceFormatterDesc: `type Formatter = (data: any) => ({ categories: string[], series: { name: string, data: number[] }[] });`
     });
 
 
@@ -284,6 +285,5 @@ export default (manager: Manager) => {
             apiUrl: "http://localhost:3000/car/list"
         }
     })
-
-
 }
+

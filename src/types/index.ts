@@ -121,6 +121,9 @@ export interface RegisterComponent<Props = any> {
 
     /** 组件默认的数据源属性值 */
     defaultDatasource?: DataSource;
+
+    /** 数据源格式化函数描述 */
+    datasourceFormatterDesc?: string;
 }
 
 /** 组件类别 */
@@ -150,7 +153,7 @@ export interface DataSource {
     /** API接口地址 */
     apiUrl?: string;
 
-    /** 数据处理函数 */
+    /** 格式化函数内容 */
     formatter?: string;
 }
 
