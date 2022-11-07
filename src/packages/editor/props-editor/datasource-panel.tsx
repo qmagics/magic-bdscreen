@@ -14,12 +14,10 @@ export default defineComponent({
     },
     setup(props) {
         const manager = inject(MANAGER_KEY)!;
-
         const block = toRef(props, 'blockData');
 
-        const component = manager.getComponentByType(block.value.type);
-
         return () => {
+            const component = manager.getComponentByType(block.value.type);
             const datasource = block.value.datasource;
 
             return <>

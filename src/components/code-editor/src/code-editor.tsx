@@ -46,15 +46,21 @@ export default defineComponent({
             }
         });
 
+        const code = ref<string>(props.modelValue);
+
         watch([() => props.width, () => props.height], () => {
             editor?.layout();
         });
 
-        watch(() => props.modelValue, (v, oldV) => {
-            // if(hasChanged(props.modelValue, v)) {
-            if (hasChanged(v, oldV)) {
-                editor?.setValue(v);
+        watch(() => props.modelValue, v => {
+            if (hasChanged(v, code.value)) {
+                code.value = v;
+                editor.setValue(v);
             }
+        });
+
+        watch(code, v => {
+            emit('update:modelValue', v);
         });
 
         watch(() => props.options, (v) => {
@@ -67,12 +73,10 @@ export default defineComponent({
 
             editor.onDidChangeModelContent(() => {
                 const newVal = editor.getValue();
-                if (hasChanged(newVal, props.modelValue)) {
-                    emit('update:modelValue', newVal);
-                }
+                code.value = newVal;
             });
 
-            editor.setValue(props.modelValue);
+            editor.setValue(code.value);
 
             if (props.options.readOnly) {
                 editor.updateOptions({ readOnly: true });
