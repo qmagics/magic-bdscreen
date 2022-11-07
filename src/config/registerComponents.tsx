@@ -259,7 +259,14 @@ export default (manager: Manager) => {
                 ]
             })
         },
-        datasourceFormatterDesc: `type Formatter = (data: any) => ({ categories: string[], series: { name: string, data: number[] }[] });`
+        datasourceFormatterDesc: 
+`type Formatter = (data: any) => ({ 
+    categories: string[], 
+    series: { 
+        name: string, 
+        data: number[] 
+    }[] 
+});`
     });
 
 

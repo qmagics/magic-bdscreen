@@ -37,7 +37,7 @@ export const createCodeDialog = (options: CodeDialogOptions) => {
         render(data) {
             return <div class="code-dialog">
                 <div class="code-dialog__header">
-                    {options.description && <CodeEditor modelValue={options.description} height={50} options={{ language: 'markdown', readOnly: true }}></CodeEditor>}
+                    {options.description && <CodeEditor modelValue={options.description} height={100} options={{ language: 'typescript', readOnly: true }}></CodeEditor>}
                 </div>
                 <div class="code-dialog__body">
                     <CodeEditor v-model={data.code} options={{ language }} height="100%"></CodeEditor>

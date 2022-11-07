@@ -34,7 +34,7 @@ export default defineComponent({
                 }
                 {datasource.type === DataSourceType.STATIC &&
                     <ElFormItem label="静态内容">
-                        <CodeEditor v-model={datasource.staticData} options={{ language: "json" }}></CodeEditor>
+                        <CodeEditorPlus v-model={datasource.staticData} options={{ language: "json" }}></CodeEditorPlus>
                     </ElFormItem>
                 }
                 <ElFormItem label="格式化">
