@@ -1,6 +1,6 @@
-import registerComponents from '@/config/registerComponents';
 import { ComponentCategory, RegisterComponent } from '@/types';
 import { deepClone } from '@/utils';
+import { RegisterComponentFn } from './type';
 
 export class Manager {
     public componentCategories: ComponentCategory[] = [
@@ -54,6 +54,11 @@ export class Manager {
 
 const manager = new Manager();
 
-registerComponents(manager);
+// 注册物料库
+const modules = import.meta.globEager('@/config/register-lib/**/*.tsx') as Record<string, { default: RegisterComponentFn }>;
+Object.keys(modules).forEach((key) => {
+    const mod = modules[key].default || {};
+    mod(manager);
+});
 
 export default manager;

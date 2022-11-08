@@ -92,6 +92,9 @@ export interface RegisterComponent<Props = any> {
     /** 组件类别 */
     category: ComponentCategory['value'];
 
+    /** 在物料库菜单中显示的顺序 */
+    orderInMenu?: number;
+
     /** 组件渲染函数 */
     render: (context: RenderContext<Props>) => any;
 
@@ -132,7 +135,7 @@ export interface ComponentCategory {
     name: string;
 
     /** 类别值 */
-    value: string;
+    value: 'basic' | 'input' | 'chart' | 'layout' | 'other';
 
     /** 类别图标 */
     icon: string;

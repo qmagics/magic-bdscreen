@@ -1,12 +1,9 @@
-import { MbChartBar } from "@/components/mb-chart-bar";
 import { MbImage } from "@/components/mb-image";
 import { MbTable } from "@/components/mb-table";
 import { Manager } from "@/packages/manager";
-import { ECOption } from "@/plugins/echarts";
 import { DataSourceType } from "@/types";
-import { serializeJSON } from "@/utils";
 import { createInputProp, createSelectProp, createPropGroup, createColorProp, createFontsizeSelect } from "@/utils/factory";
-import { ElButton, ElInput, ButtonProps, Column } from 'element-plus';
+import { ElButton, ButtonProps, Column } from 'element-plus';
 import { StyleValue } from "vue";
 
 // 统一注册物料组件
@@ -168,128 +165,6 @@ export default (manager: Manager) => {
             //         Price: 213000
             //     }
             // ],null,2)
-        }
-    })
-
-    // 输入框
-    manager.registerComponent<{ size: string, placeholder: string }>({
-        name: "输入框",
-        type: "input",
-        icon: "input",
-        category: "input",
-        preview: () => <ElInput></ElInput>,
-        render: ({ props, size, model }) => {
-            const style: StyleValue = {
-                width: size.width && size.width + 'px',
-                height: size.height && size.height + 'px',
-            };
-
-            return <ElInput
-                placeholder={props.placeholder}
-                size={props.size}
-                style={style}
-                {...model.default}></ElInput>;
-        },
-        // editor: ({ props, block }) => {
-        //     return <div>
-        //         <ElInput v-model={props.placeholder}></ElInput>
-        //         <ElInputNumber v-model={block.value.size.width}></ElInputNumber>
-        //     </div>
-        // },
-        // props: {
-        //     placeholder: createInputProp('占位文本'),
-        //     size: createSelectProp('尺寸', [
-        //         { label: "小", value: "small" },
-        //         { label: "默认", value: "default" },
-        //         { label: "大", value: "large" },
-        //     ]),
-        // },
-        defaultProps: {
-            placeholder: "请输入内容",
-            size: "default"
-        },
-        resize: {
-            width: true,
-            height: false
-        },
-        model: {
-            default: "绑定字段"
-        }
-    })
-
-
-
-    // ========== 图表 ==========
-
-    // 柱状图
-    manager.registerComponent<{ option: ECOption }>({
-        name: "柱状图",
-        type: "mb-chart-bar",
-        icon: "chart-bar",
-        category: "chart",
-        render: ({ props, size, data, state }) => {
-            return <MbChartBar {...props} size={size} data={data} loading={state.loading}></MbChartBar>
-        },
-        defaultSize: {
-            width: 300,
-            height: 150,
-        },
-        resize: {
-            width: true,
-            height: true
-        },
-        defaultDatasource: {
-            type: DataSourceType.STATIC,
-            // apiUrl: "http://localhost:3000/car/list",
-            staticData: serializeJSON({
-                categories: [
-                    '奥迪',
-                    '宝马',
-                    '奔驰'
-                ],
-                series: [
-                    {
-                        name: "售价",
-                        data: [
-                            120000,
-                            346000,
-                            286000
-                        ]
-                    }
-                ]
-            })
-        },
-        datasourceFormatterDesc: 
-`type Formatter = (data: any) => ({ 
-    categories: string[], 
-    series: { 
-        name: string, 
-        data: number[] 
-    }[] 
-});`
-    });
-
-
-    // 饼图
-    manager.registerComponent<{ columns: Column[] }>({
-        name: "饼图",
-        type: "mb-chart-pie",
-        icon: "chart-pie",
-        category: "chart",
-        render: ({ props, size, data, state }) => {
-            return <div>...</div>
-        },
-        defaultSize: {
-            width: 100,
-            height: 100,
-        },
-        resize: {
-            width: true,
-            height: true
-        },
-        defaultDatasource: {
-            type: DataSourceType.API,
-            apiUrl: "http://localhost:3000/car/list"
         }
     })
 }

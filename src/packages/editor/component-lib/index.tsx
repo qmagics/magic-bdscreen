@@ -14,7 +14,8 @@ export default defineComponent({
         const { componentList, componentCategories } = manager!;
 
         const currentComponentList = computed(() => {
-            return componentList.filter(i => i.category === componentLib.activeCategory);
+            return componentList.filter(i => i.category === componentLib.activeCategory)
+                .sort((a, b) => (a.orderInMenu || Infinity) - (b.orderInMenu || Infinity));
         });
 
         const onItemDragstart = (e: Event, component: RegisterComponent) => {
