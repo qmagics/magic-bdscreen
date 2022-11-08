@@ -73,6 +73,7 @@ export default defineComponent({
 
             editor.onDidChangeModelContent(() => {
                 const newVal = editor.getValue();
+
                 code.value = newVal;
             });
 
