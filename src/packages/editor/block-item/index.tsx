@@ -4,7 +4,8 @@ import { BlockData, FormModel, RenderContextState } from "@/types";
 import { computed, defineComponent, inject, onMounted, PropType, reactive, ref, Ref, StyleValue, toRef } from "vue";
 import BlockResizer from "../block-resizer";
 import { afterScale, beforeScale } from "../utils";
-import { useData } from "./useData";
+import { useData } from "@/packages/hooks/useData";
+import { watchDebounced } from "@vueuse/core";
 
 // 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
@@ -59,7 +60,14 @@ export default defineComponent({
 
         useAdjustElement(props.block, blockRef);
 
-        const { data } = useData({ block: toRef(props, 'block'), state });
+        const { data, refresh } = useData({ block: toRef(props, 'block'), state });
+
+        watchDebounced([
+            () => props.block.datasource?.apiUrl,
+            () => props.block.datasource?.type,
+            () => props.block.datasource?.staticData,
+            () => props.block.datasource?.formatter
+        ], refresh, { immediate: true, debounce: 300 });
 
         return () => {
             const component = manager.getComponentByType(props.block.type);

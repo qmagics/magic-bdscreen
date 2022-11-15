@@ -1,4 +1,5 @@
 import { MbSize } from "@/types/components";
+import { isArray } from "@/utils";
 import { Column, ElTable, ElTableColumn } from "element-plus";
 import { computed, defineComponent, PropType } from "vue";
 
@@ -20,11 +21,15 @@ export default defineComponent({
             return props.columns;
         });
 
+        const tableData = computed(() => {
+            return isArray(props.data) ? props.data : [];
+        });
+
         return () => {
             const { width, height } = props.size || {};
 
             return <div class="mb-table" style={{ width: width + 'px', height: height + 'px' }}>
-                <ElTable height={height} data={props.data} v-loading={props.loading}>
+                <ElTable height={height} data={tableData.value} v-loading={props.loading}>
                     {
                         columns.value.map(column => <ElTableColumn {...column}></ElTableColumn>)
                     }

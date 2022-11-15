@@ -8,23 +8,26 @@ router.get('/car/list', async (ctx) => {
 
     ctx.body = {
         code: 1,
-        data: [
-            {
-                Brand: "奥迪",
-                Name: "奥迪A7",
-                Price: 568000
-            },
-            {
-                Brand: "宝马",
-                Name: "宝马5系",
-                Price: 526000
-            },
-            {
-                Brand: "本田",
-                Name: "雅阁",
-                Price: 213000
-            }
-        ]
+        data: {
+            rows: [
+                {
+                    Brand: "奥迪",
+                    Name: "奥迪A7",
+                    Price: 568000
+                },
+                {
+                    Brand: "宝马",
+                    Name: "宝马5系",
+                    Price: 526000
+                },
+                {
+                    Brand: "本田",
+                    Name: "雅阁",
+                    Price: 213000
+                }
+            ],
+            total: 3
+        }
     }
 });
 

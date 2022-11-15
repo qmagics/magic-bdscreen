@@ -1,4 +1,3 @@
-import { CodeEditor } from "@/components/code-editor";
 import { CodeEditorPlus } from "@/components/code-editor-plus";
 import { MANAGER_KEY } from "@/packages/tokens";
 import { BlockData, DataSource, DataSourceType } from "@/types";
@@ -39,6 +38,9 @@ export default defineComponent({
                 }
                 <ElFormItem label="格式化">
                     <CodeEditorPlus v-model={datasource.formatter} description={component.datasourceFormatterDesc} options={{ language: "javascript" }}></CodeEditorPlus>
+                </ElFormItem>
+                <ElFormItem label="结果预览">
+                    {/* <CodeEditor modelValue={}></CodeEditor> */}
                 </ElFormItem>
             </>
         }

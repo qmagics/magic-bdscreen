@@ -1,7 +1,7 @@
 import { MANAGER_KEY } from "@/packages/tokens";
 import { BlockData, FormModel, RenderContextState } from "@/types";
 import { computed, defineComponent, inject, onMounted, PropType, reactive, ref, Ref, StyleValue, toRef } from "vue";
-import { useData } from "./useData";
+import { useData } from "@/packages/hooks/useData";
 
 // 校正和补充元素属性
 const useAdjustElement = (block: BlockData, blockRef: Ref<HTMLDivElement | undefined>) => {
