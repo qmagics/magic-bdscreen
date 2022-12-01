@@ -17,6 +17,9 @@ export interface CodeDialogOptions {
 
     /** 描述 */
     description?: string;
+
+    /** 只读 */
+    readOnly?: boolean;
 }
 
 const DEFAULT_OPTIONS = {
@@ -29,7 +32,7 @@ const DEFAULT_OPTIONS = {
  * @param options 
  */
 export const createCodeDialog = (options: CodeDialogOptions) => {
-    const { title, code, language, onConfirm } = { ...DEFAULT_OPTIONS, ...options };
+    const { title, code, language, onConfirm, readOnly } = { ...DEFAULT_OPTIONS, ...options };
 
     const dlg = Dialog({
         title,
@@ -40,7 +43,7 @@ export const createCodeDialog = (options: CodeDialogOptions) => {
                     {options.description && <CodeEditor modelValue={options.description} height={100} options={{ language: 'typescript', readOnly: true }}></CodeEditor>}
                 </div>
                 <div class="code-dialog__body">
-                    <CodeEditor v-model={data.code} options={{ language }} height="100%"></CodeEditor>
+                    <CodeEditor v-model={data.code} options={{ language, readOnly }} height="100%"></CodeEditor>
                 </div>
             </div>
         },
@@ -69,5 +72,5 @@ export const editCode = (options: CodeDialogOptions) => {
  * @param options 
  */
 export const viewCode = (options: CodeDialogOptions) => {
-    return createCodeDialog({ ...options, title: '查看代码' });
+    return createCodeDialog({ ...options, title: '查看代码', readOnly: true });
 }

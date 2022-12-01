@@ -36,7 +36,7 @@
                 "model": {},
                 "datasource": {
                     "type": 2,
-                    "apiUrl": "http://localhost:3000/car/list"
+                    "apiUrl": "http://localhost:3000/car/list2"
                 },
                 "isFocused": false
             },
@@ -69,7 +69,7 @@
                 "model": {},
                 "datasource": {
                     "type": 2,
-                    "apiUrl": "http://localhost:3000/car/list"
+                    "apiUrl": "http://localhost:3000/car/list2"
                 },
                 "isFocused": false
             },

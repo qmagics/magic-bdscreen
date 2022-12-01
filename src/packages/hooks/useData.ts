@@ -1,11 +1,12 @@
 import { BlockData, DataSource, DataSourceType, RenderContextState } from "@/types";
 import request from "@/utils/request";
-import { Ref, ref } from "vue";
+import { onMounted, Ref, ref } from "vue";
 import { isFunction, parseJSON } from "@/utils";
 
 export interface UseDataParams {
     block: Ref<BlockData>;
-    state: RenderContextState;
+    refreshImmediate?: boolean;
+    // state: RenderContextState;
 }
 
 const DEFAULT_FORMATTER_FN = (v: any) => v;
@@ -71,27 +72,34 @@ export const getData = async (datasource: DataSource) => {
     return data;
 }
 
-export const useData = ({ block, state }: UseDataParams) => {
+export const useData = ({ block, refreshImmediate = true }: UseDataParams) => {
     const data = ref<any>();
+
+    const loading = ref(false);
 
     const refresh = async () => {
         const datasource = block.value.datasource;
 
         if (!datasource) return;
 
-        state.loading = true;
+        loading.value = true;
 
         try {
             data.value = await getData(datasource);
             // let _data = await getResolvedData(datasource);
             // data.value = await getFormatedData(_data, datasource);
         } finally {
-            state.loading = false
+            loading.value = false
         }
     }
 
+    onMounted(() => {
+        refreshImmediate && refresh();
+    });
+
     return {
         data,
+        loading,
         refresh
     }
 }

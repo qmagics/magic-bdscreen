@@ -8,6 +8,8 @@ export class Manager {
         { name: '布局', value: 'layout', icon: 'layout' },
         { name: '输入', value: 'input', icon: 'input' },
         { name: '图表', value: 'chart', icon: 'chart' },
+        { name: '云组件', value: 'online', icon: 'cloud' },
+        { name: '自定义', value: 'custom', icon: 'custom' },
     ];
 
     public componentList: RegisterComponent<any>[] = [];

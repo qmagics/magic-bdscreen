@@ -10,7 +10,7 @@ import SvgIcon from '@/components/svg-icon';
 import '@/plugins/echarts';
 
 // 导入字体
-import "//at.alicdn.com/t/c/font_3664032_hgl2336cy9d.js";
+import "//at.alicdn.com/t/c/font_3664032_kvh8ikhlo9.js";
 
 // 创建应用
 const app = createApp(App);

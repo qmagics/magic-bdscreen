@@ -1,6 +1,6 @@
 import { MANAGER_KEY } from "@/packages/tokens";
 import { BlockData, FormModel, RenderContextState } from "@/types";
-import { computed, defineComponent, inject, onMounted, PropType, reactive, ref, Ref, StyleValue, toRef } from "vue";
+import { computed, defineComponent, inject, onMounted, PropType, reactive, ref, Ref, StyleValue, toRef, watch } from "vue";
 import { useData } from "@/packages/hooks/useData";
 
 // 校正和补充元素属性
@@ -51,7 +51,8 @@ export default defineComponent({
 
         useAdjustElement(props.block, blockRef);
 
-        const { data } = useData({ block: toRef(props, 'block'), state });
+        const { data, loading, refresh } = useData({ block: toRef(props, 'block') });
+        watch(loading, v => state.loading = v);
 
         return () => {
             const component = manager.getComponentByType(props.block.type);

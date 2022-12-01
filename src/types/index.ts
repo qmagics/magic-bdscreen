@@ -135,7 +135,7 @@ export interface ComponentCategory {
     name: string;
 
     /** 类别值 */
-    value: 'basic' | 'input' | 'chart' | 'layout' | 'other';
+    value: 'basic' | 'input' | 'chart' | 'layout' | 'online' | 'custom' | 'other';
 
     /** 类别图标 */
     icon: string;

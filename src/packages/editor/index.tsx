@@ -2,7 +2,7 @@ import '@/styles/editor/index.scss';
 import { computed, defineComponent, inject, PropType, provide, ref, StyleValue } from "vue";
 import EditorHeader from './header';
 import { ConfigData, FormModel } from "@/types";
-import { deepClone } from "@/utils";
+import { deepClone, serializeJSON } from "@/utils";
 import BlockItem from "./block-item";
 import ComponentLib from "./component-lib";
 import SidebarPanel from './sidebar-panel';
@@ -123,13 +123,16 @@ export default defineComponent({
 
             // 预览画布
             const previewCanvas = (
-                <div class="preview-canvas" style={canvasStyle.value} ref={canvasRef}>
-                    {
-                        configData.value?.blocks.map((block) => {
-                            return <BlockItem block={block} formData={props.formData}></BlockItem>
-                        })
-                    }
-                </div>
+                <>
+                    <div class="preview-canvas" style={canvasStyle.value} ref={canvasRef}>
+                        {
+                            configData.value?.blocks.map((block) => {
+                                return <BlockItem block={block} formData={props.formData}></BlockItem>
+                            })
+                        }
+                    </div>
+                    <pre style="color:#fff;">{serializeJSON(props.formData)}</pre>
+                </>
             )
 
             // 左侧边兰
